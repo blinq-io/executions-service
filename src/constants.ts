@@ -1,0 +1,1 @@
+export const THREAD_LIMIT = 10;
