@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: worker-{{POD_ID}}
+spec:
+  restartPolicy: Never
+  containers:
+    - name: worker
+      image: execution-controller:latest
+      env:
+        - name: EXECUTION_ID
+          value: "{{EXECUTION_ID}}"
+        - name: EXTRACT_DIR
+          value: "{{EXTRACT_DIR}}"
+        - name: POD_ID
+          value: "{{POD_ID}}"
+        - name: FLOW_GROUP_KEY
+          value: "{{FLOW_GROUP_KEY}}"
+        - name: BLINQ_TOKEN
+          value: "{{BLINQ_TOKEN}}"
+        - name: BACKEND_SOCKET_URL
+          value: "{{SOCKET_URL}}" # e.g., ws://backend-service:5000
+        - name: AGENT_MODE
+          value: "true"
+      volumeMounts:
+        - mountPath: /app/shared
+          name: shared-volume
+  volumes:
+    - name: shared-volume
+      persistentVolumeClaim:
+        claimName: pvc-{{EXECUTION_ID}}

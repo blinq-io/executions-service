@@ -14,6 +14,15 @@ export const runExecution = async (req: Request, res: Response) => {
   const execution = await ExecutionModel.findById(req.params.id);
   if (!execution) return res.status(404).json({ error: 'Execution not found' });
 
+  const environmentVariables = req.body;
+  
+  // set the process.env variables
+  for (const [key, value] of Object.entries(environmentVariables)) {
+    process.env[key] = String(value); // Safe coercion to string
+  }
+
+  console.log('✅ Environment variables set:', process.env.BLINQ_TOKEN, process.env.EXTRACT_DIR);
+
   const runner = new ExecutionRunner(execution, io);
   runner.start(); // trigger K8s interaction etc
   res.json({ message: 'Execution started' });

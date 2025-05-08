@@ -1,0 +1,11 @@
+# pvc.yaml (created per execution with unique name)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-6819b2976e53a8e793d1ab3e
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi

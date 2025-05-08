@@ -28,6 +28,7 @@ export interface Schedule {
 }
 
 export interface Execution extends Document {
+  _id: string;
   name: string;
   env: string;
   flows: Flow[];
