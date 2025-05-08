@@ -11,5 +11,6 @@ COPY . .
 RUN chmod +x environment-setup.sh start.sh
 
 RUN tsc src/agent-entry.ts
+RUN cat start.sh
 
 CMD ["./start.sh"]

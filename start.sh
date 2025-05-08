@@ -18,7 +18,7 @@ if [ -z "$EXECUTION_ID" ]; then
   exit 1
 fi
 
-echo "🌳 Node js version ->> $(node -v)"
+echo "🌳 ->> $(node -v) 🌳"
 
 npm run build
 
