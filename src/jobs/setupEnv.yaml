@@ -1,11 +1,14 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: execution-bootstrap-<EXECUTION_ID>
+  name: setup-<EXECUTION_ID>
+  labels:
+    version-hash: "v<BUILD_ID>"
 spec:
   containers:
     - name: setup
-      image: execution-controller:latest
+      image: execution-controller:dev
+      imagePullPolicy: Never
       env:
         - name: EXTRACT_DIR
           value: <UUID> # unique per execution/project

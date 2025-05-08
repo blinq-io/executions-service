@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: execution-pvc-<EXECUTION_ID>
+  name: pvc-<EXECUTION_ID>
 spec:
   accessModes:
     - ReadWriteMany

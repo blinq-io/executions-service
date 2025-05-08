@@ -52,7 +52,8 @@ export class ExecutionRunner {
     await k8sClient.applyManifestFromFile('src/jobs/setupEnv.yaml', {
       EXECUTION_ID,
       EXTRACT_DIR,
-      BLINQ_TOKEN
+      BLINQ_TOKEN,
+      BUILD_ID: String(new Date().getTime()),
     });
 
     console.log('🚀 Setup pod launched:', setupPodName);
@@ -80,7 +81,7 @@ export class ExecutionRunner {
             BLINQ_TOKEN,
             SOCKET_URL: BACKEND_SOCKET_URL,
           });
-
+          console.log(`🚀 Launching pod ${podId} for ${flowGroupKey}`);
           k8sClient.createPodFromYaml(podSpec);
         }
       });

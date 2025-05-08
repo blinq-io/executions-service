@@ -6,7 +6,7 @@ spec:
   restartPolicy: Never
   containers:
     - name: worker
-      image: execution-controller:latest
+      image: execution-controller:dev
       env:
         - name: EXECUTION_ID
           value: "{{EXECUTION_ID}}"
