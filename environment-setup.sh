@@ -7,7 +7,6 @@ TOKEN=$2
 PROJECT_ROOT="shared/project-dir"
 EXTRACT_PATH="$PROJECT_ROOT/$EXTRACT_DIR"
 
-echo "▶️  Starting container..."
 echo "📦 Using extract dir: $EXTRACT_DIR"
 echo "🔐 Using token: $TOKEN"
 echo "🔧 Setting up environment in $EXTRACT_PATH"

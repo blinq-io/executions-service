@@ -3,18 +3,32 @@ import ExecutionModel from '../models/execution.model';
 import { ExecutionRunner } from '../classes/ExecutionRunner';
 import { THREAD_LIMIT } from '../constants';
 import { io } from '../app';
+import { updateStream } from '../utils/sse';
 
 export const createExecution = async (req: Request, res: Response) => {
-  const execution = new ExecutionModel(req.body);
-  await execution.save();
-  res.status(201).json(execution);
+  try {
+    const execution = new ExecutionModel(req.body);
+    await execution.save();
+
+    // console.log('🚀 Sending update via stream')
+    // await updateStream();
+    // console.log('🚀 Update sent via stream')
+
+    res.status(201).json(execution);
+  } catch (error) {
+    console.error('Error creating execution:', error);
+    res.status(500).json({ message: 'Failed to create execution.' });
+  }
 };
+
 
 export const runExecution = async (req: Request, res: Response) => {
   const execution = await ExecutionModel.findById(req.params.id);
   if (!execution) return res.status(404).json({ error: 'Execution not found' });
 
   const environmentVariables = req.body;
+
+  console.log('⚙️ Environment variables:', environmentVariables);
   
   // set the process.env variables
   for (const [key, value] of Object.entries(environmentVariables)) {

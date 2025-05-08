@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Delete the existing pod (ignore error if not found)
-kubectl delete pod setup-6819b2976e53a8e793d1ab3e || true
-kubectl delete pvc pvc-6819b2976e53a8e793d1ab3e || true
+kubectl delete pod setup-681c9703caf20a72a22cbe49 || true
+kubectl delete pvc pvc-681c9703caf20a72a22cbe49 || true
 
 # Exit on error
 set -e

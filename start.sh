@@ -18,18 +18,16 @@ if [ -z "$EXECUTION_ID" ]; then
   exit 1
 fi
 
-echo "📦 Using extract dir: $EXTRACT_DIR"
-node -v
-echo "🔐 Using token: $BLINQ_TOKEN"
+echo "🌳 Node js version ->> $(node -v)"
 
 npm run build
 
-# if [ "$AGENT_MODE" = "true" ]; then
-#   echo "🧠 Starting in agent mode..."
-#   node dist/agent-entry.js
-#   exit 0
-# fi
+if [ "$AGENT_MODE" = "true" ]; then
+  echo "🧠 Starting in agent mode..."
+  node dist/agent-entry.js
+  exit 0
+fi
 
-# # Fallback to setup mode
-# ./environment-setup.sh "$EXTRACT_DIR" "$BLINQ_TOKEN"
+# Fallback to setup mode
+./environment-setup.sh "$EXTRACT_DIR" "$BLINQ_TOKEN"
 exit 0

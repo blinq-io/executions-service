@@ -49,10 +49,18 @@ export class KubernetesClient {
 
     switch (obj.kind) {
       case 'PersistentVolumeClaim':
-        return await this.k8sApi.createNamespacedPersistentVolumeClaim({
-          namespace: this.namespace,
-          body: obj as k8s.V1PersistentVolumeClaim
-        });
+        try {
+          return await this.k8sApi.createNamespacedPersistentVolumeClaim({
+            namespace: this.namespace,
+            body: obj as k8s.V1PersistentVolumeClaim
+          });
+        } catch (err: any) {
+          if (err?.body?.reason === 'AlreadyExists') {
+            console.log(`⚠️ PVC ${obj.metadata?.name} already exists, skipping creation.`);
+            return;
+          }
+          throw err; // rethrow if it's a different error
+        }
       case 'Pod':
         return await this.k8sApi.createNamespacedPod({
           namespace: this.namespace,

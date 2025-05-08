@@ -84,3 +84,6 @@ Gracefully close agent sockets
 Delete worker pods
 
 Optionally delete the PVC
+
+
+# Running br.sh
