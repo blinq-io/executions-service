@@ -17,7 +17,7 @@ app.use(express.json());
 app.use('/executions', executionRoutes);
 
 // store a reference to io globally or via context
-httpServer.listen(5000, () => console.log('🚀 HTTP Server running on port 5000'));
+httpServer.listen(5000,'0.0.0.0', () => console.log('🚀 HTTP Server running on port 5000'));
 export { io };
 
 export default app;

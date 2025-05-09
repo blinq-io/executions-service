@@ -18,15 +18,15 @@ export class KubernetesClient {
     const manifest = yaml.load(yamlContent) as k8s.V1Pod;
 
     if (!manifest || !manifest.metadata?.name) {
-      throw new Error('Invalid pod manifest.');
+      throw new Error('❌ Invalid pod manifest.');
     }
 
-    try {
+  try {
       await this.k8sApi.createNamespacedPod({
         namespace: 'default', // The namespace of the pod
         body: manifest        // The manifest of the pod (k8s.V1Pod)
       });
-      console.log(`🚀 Created pod ${manifest.metadata.name}`);
+      console.log(`⭐ Created pod ${manifest.metadata.name}`);
     } catch (err: any) {
       console.error('❌ Failed to create pod:', err.body || err.message);
       throw err;
@@ -35,18 +35,18 @@ export class KubernetesClient {
 
   async applyManifestFromFile(filePath: string, vars: Record<string, string>) {
     let content = fs.readFileSync(filePath, 'utf-8');
-    console.log('🪨 Content of', filePath, 'before:', JSON.stringify(content, null, 2));
     for (const [key, value] of Object.entries(vars)) {
       content = content.replace(new RegExp(`\\$\\{${key}\\}`, 'g'), value); // ${KEY}
       content = content.replace(new RegExp(`<${key}>`, 'g'), value);       // <KEY>
     }
-    console.log('✨ Content of', filePath, 'after:', JSON.stringify(content, null, 2));
+
+
 
     const obj = k8s.loadYaml(content) as k8s.V1PersistentVolumeClaim | k8s.V1Pod;
     if (!obj.kind) {
       throw new Error('Manifest is missing `kind` field.');
     }
-
+    console.log(`🔍 Applying manifest for ${obj.kind}...`);
     switch (obj.kind) {
       case 'PersistentVolumeClaim':
         try {
@@ -55,17 +55,41 @@ export class KubernetesClient {
             body: obj as k8s.V1PersistentVolumeClaim
           });
         } catch (err: any) {
-          if (err?.body?.reason === 'AlreadyExists') {
+          let reason = '';
+          try {
+            const parsedBody = typeof err.body === 'string' ? JSON.parse(err.body) : err.body;
+            reason = parsedBody?.reason;
+          } catch (e) {
+            // swallow parse error
+          }
+          if (reason === 'AlreadyExists') {
             console.log(`⚠️ PVC ${obj.metadata?.name} already exists, skipping creation.`);
             return;
           }
-          throw err; // rethrow if it's a different error
+          throw err;
         }
       case 'Pod':
-        return await this.k8sApi.createNamespacedPod({
-          namespace: this.namespace,
-          body: obj as k8s.V1Pod
-        });
+        try {
+          return await this.k8sApi.createNamespacedPod({
+            namespace: this.namespace,
+            body: obj as k8s.V1Pod,
+          });
+        } catch (err: any) {
+          let reason = '';
+          try {
+            const parsedBody = typeof err.body === 'string' ? JSON.parse(err.body) : err.body;
+            reason = parsedBody?.reason;
+          } catch (e) {
+            // swallow parse error
+          }
+    
+          if (reason === 'AlreadyExists') {
+            console.log(`⚠️ Pod ${obj.metadata?.name} already exists, skipping creation.`);
+            return;
+          }
+    
+          throw err;
+        }
       default:
         throw new Error(`Unsupported kind: ${obj.kind}`);
     }
@@ -85,7 +109,7 @@ export class KubernetesClient {
     });
   }
 
-  async waitForPodCompletion(podName: string, timeoutMs = 60000) {
+  async waitForPodCompletion(podName: string, timeoutMs = 120000) {
     const start = Date.now();
 
     while (Date.now() - start < timeoutMs) {
@@ -106,7 +130,7 @@ export class KubernetesClient {
         throw new Error(`❌ Setup pod ${podName} failed.`);
       }
 
-      await new Promise(resolve => setTimeout(resolve, 3000)); // 3s delay
+      await new Promise(resolve => setTimeout(resolve, 5000)); // 3s delay
     }
 
     throw new Error(`⏰ Timeout waiting for setup pod ${podName}`);

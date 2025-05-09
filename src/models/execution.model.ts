@@ -51,3 +51,14 @@ const executionSchema = new Schema<Execution>({
 });
 
 export default mongoose.model<Execution>('Execution', executionSchema);
+
+export interface Task {
+  id: string;
+  data: TaskData;
+}
+
+export interface TaskData {
+  command: string;
+  featureIndex: number;
+  scenarioIndex: number;
+}

@@ -1,16 +1,16 @@
-FROM mcr.microsoft.com/playwright:v1.50.1-jammy
+    FROM mcr.microsoft.com/playwright:v1.50.1-jammy
 
-WORKDIR /app
+    WORKDIR /app
 
-COPY package.json package-lock.json* ./
+    COPY package.json package-lock.json* ./
 
-RUN npm install -g typescript && npm install
+    RUN npm install -g typescript && npm install
 
-COPY . .
+    COPY . .
 
-RUN chmod +x environment-setup.sh start.sh
+    RUN chmod +x environment-setup.sh start.sh
 
-RUN tsc src/agent-entry.ts
-RUN cat start.sh
+    RUN tsc src/agent-entry.ts
+    RUN cat start.sh
 
-CMD ["./start.sh"]
+    CMD ["./start.sh"]

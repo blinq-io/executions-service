@@ -6,7 +6,8 @@ spec:
   restartPolicy: Never
   containers:
     - name: worker
-      image: execution-controller:dev
+      image: execution-controller:sd23
+      imagePullPolicy: Never
       env:
         - name: EXECUTION_ID
           value: "{{EXECUTION_ID}}"
@@ -18,8 +19,8 @@ spec:
           value: "{{FLOW_GROUP_KEY}}"
         - name: BLINQ_TOKEN
           value: "{{BLINQ_TOKEN}}"
-        - name: BACKEND_SOCKET_URL
-          value: "{{SOCKET_URL}}" # e.g., ws://backend-service:5000
+        - name: SOCKET_URL
+          value: "{{SOCKET_URL}}"
         - name: AGENT_MODE
           value: "true"
       volumeMounts:
