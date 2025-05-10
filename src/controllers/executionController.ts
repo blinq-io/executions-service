@@ -32,10 +32,13 @@ export const runExecution = async (req: Request, res: Response) => {
   
   // set the process.env variables
   for (const [key, value] of Object.entries(environmentVariables)) {
-    process.env[key] = String(value); // Safe coercion to string
+    process.env[key] = String(value);
   }
 
-  console.log('✅ Environment variables set:', process.env.BLINQ_TOKEN, process.env.EXTRACT_DIR);
+  console.log('✅ Environment variables set:', {
+    token: process.env.BLINQ_TOKEN, 
+    projectId: process.env.EXTRACT_DIR
+  });
 
   const runner = new ExecutionRunner(execution, io);
   runner.start(); // trigger K8s interaction etc

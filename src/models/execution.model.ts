@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface Scenario {
   featureIndex: number;
   scenarioIndex: number;
-  weight: number;
+  command: string;
 }
 
 export interface ScenarioGroup {
@@ -54,11 +54,5 @@ export default mongoose.model<Execution>('Execution', executionSchema);
 
 export interface Task {
   id: string;
-  data: TaskData;
-}
-
-export interface TaskData {
-  command: string;
-  featureIndex: number;
-  scenarioIndex: number;
+  data: Scenario;
 }

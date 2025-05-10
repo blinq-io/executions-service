@@ -47,7 +47,7 @@ export class ExecutionRunner {
     await k8sClient.applyManifestFromFile('src/jobs/pvc.yaml', {
       EXECUTION_ID,
     });
-    let skipSetup = true;
+    let skipSetup = false;
     if(!skipSetup) {
       await k8sClient.applyManifestFromFile('src/jobs/setupEnv.yaml', {
         EXECUTION_ID,

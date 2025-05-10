@@ -24,10 +24,12 @@ fi
 
 npm install @dev-blinq/cucumber-js@stage
 
+
+
 # Download and install runtime dependencies using provided token
-npx cross-env NODE_ENV_BLINQ=stage node ./node_modules/@dev-blinq/cucumber-js/bin/download-install.js \
+(npx cross-env NODE_ENV_BLINQ=stage node ./node_modules/@dev-blinq/cucumber-js/bin/download-install.js \
   --token "$TOKEN" \
-  --extractDir "$EXTRACT_DIR"
+  --extractDir "$EXTRACT_DIR")
 
 cd "$EXTRACT_DIR"
 

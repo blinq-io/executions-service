@@ -7,6 +7,6 @@ delpvc $1 delete pvc
 
 
 Temporary:
-alias delworkers='kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep 'worker-681def26d7b4790c227aca1b' | xargs kubectl delete pod'
+alias delworkers='kubectl get pods --no-headers -o custom-columns=":metadata.name" | grep 'worker-681e11c6f92a259ef51da7f0' | xargs kubectl delete pod'
 
-docker build -t execution-controller:sd23 .; minikube image load execution-controller:sd23;
+docker build -t execution-controller:adi1 .; minikube image load execution-controller:adi1;

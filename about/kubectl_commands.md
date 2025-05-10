@@ -2,19 +2,19 @@ delete ❯ kubectl delete pod $POD_NAME
 get logs ❯ kubectl logs $POD_NAME
 get pods ❯ kubectl get pods
 apply manifest file ❯ kubectl apply -f src/jobs/testing/setupEnv.yaml
-docker build ❯ docker build -t execution-controller:sd23 .
+docker build ❯ docker build -t execution-controller:adi1 .
 
 To debug a pod like this:
 backend on  main [✘!?] via 🐳 tcp://127.0.0.1:50937 is 📦 v1.0.0 via  v22.14.0 on ☁️  (eu-north-1) took 24s 
 ❯ kubectl get pods
 NAME                             READY   STATUS   RESTARTS   AGE
-setup-681def26d7b4790c227aca1b   0/1     Error    0          13s
+setup-681e11c6f92a259ef51da7f0   0/1     Error    0          13s
 
-❯ kubectl describe pod setup-681def26d7b4790c227aca1b
+❯ kubectl describe pod setup-681e11c6f92a259ef51da7f0
 observe details like start time, end time, exit code
 
 we did this:
 kubectl apply -f src/jobs/pvc.yaml
 kubectl apply -f src/jobs/setupEnv.yaml
 
-continuous logs ❯ kubectl logs -f setup-681def26d7b4790c227aca1b
+continuous logs ❯ kubectl logs -f setup-681e11c6f92a259ef51da7f0
