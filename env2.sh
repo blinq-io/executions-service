@@ -2,6 +2,9 @@
 set -e  # Exit on errors (except those we handle manually)
 set -x  # Print each command before executing it (for debugging)
 
+# EXTRACT_DIR=$1
+# TOKEN=$2
+
 PROJECT_ROOT="shared/project-dir"
 EXTRACT_PATH="$PROJECT_ROOT/$EXTRACT_DIR"
 
@@ -22,8 +25,10 @@ fi
 
 npm install @dev-blinq/cucumber-js@stage
 
+
+
 # Download and install runtime dependencies using provided token
-npx cross-env NODE_ENV_BLINQ=$NODE_ENV_BLINQ node ./node_modules/@dev-blinq/cucumber-js/bin/download-install.js \
+npx cross-env NODE_ENV_BLINQ=stage node ./node_modules/@dev-blinq/cucumber-js/bin/download-install.js \
   --token "$BLINQ_TOKEN" \
   --extractDir "$EXTRACT_DIR"
 

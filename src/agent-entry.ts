@@ -73,6 +73,8 @@ socket.on('hello', (msg) => {
   console.log('👋 Hello from server:', msg);
 });
 
+socket.emit('hello', 'world');
+
 socket.on('disconnect', (reason) => {
   console.warn(`❌ Disconnected: ${reason}`);
   process.exit(1);

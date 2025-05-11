@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Delete the existing pod (ignore error if not found)
-kubectl delete pod setup-681e11c6f92a259ef51da7f0 --ignore-not-found
-kubectl delete pvc pvc-681e11c6f92a259ef51da7f0 --ignore-not-found
-kubectl wait --for=delete pod/setup-681e11c6f92a259ef51da7f0 --timeout=30s || true
+kubectl delete pod setup-681f5cec9074438ede56819f --ignore-not-found
+kubectl delete pvc pvc-681f5cec9074438ede56819f --ignore-not-found
+kubectl wait --for=delete pod/setup-681f5cec9074438ede56819f --timeout=30s || true
 
 # Exit on error
 set -e

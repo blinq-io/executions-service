@@ -21,10 +21,10 @@ export class ExecutionRunner {
   }
 
   private initializeQueues() {
-    this.execution.flows.forEach((flow, index) => {
+    this.execution.flows.forEach((flow, flowIndex) => {
       flow.scenarioGroups.forEach((group, groupIndex) => {
-        const flowGroupKey = getFlowGroupKey(this.execution._id, index, groupIndex);
-        this.flowTaskQueues.set(flowGroupKey, getTasksArray(group.scenarios, index, groupIndex));
+        const flowGroupKey = getFlowGroupKey(this.execution._id, flowIndex, groupIndex);
+        this.flowTaskQueues.set(flowGroupKey, getTasksArray(group.scenarios, flowIndex, groupIndex));
         console.log('🗂️ Initialized task queue for', flowGroupKey, group.scenarios);
       });
     });
@@ -40,20 +40,26 @@ export class ExecutionRunner {
     const k8sClient = new KubernetesClient();
     const pvcName = `pvc-${this.execution._id}`;
     const setupPodName = `setup-${this.execution._id}`;
-    const EXTRACT_DIR = process.env.EXTRACT_DIR!;
+    // const EXTRACT_DIR = process.env.EXTRACT_DIR!;
+    const EXTRACT_DIR = this.execution.projectId;
     const BLINQ_TOKEN = process.env.BLINQ_TOKEN!;
     const EXECUTION_ID = this.execution._id; 
+    const NODE_ENV_BLINQ = process.env.NODE_ENV_BLINQ || 'dev';
+
+    console.log('🌲🌲🌲🌲🌲 The projectId is', process.env.EXTRACT_DIR, '&', EXTRACT_DIR);
 
     await k8sClient.applyManifestFromFile('src/jobs/pvc.yaml', {
       EXECUTION_ID,
     });
-    let skipSetup = false;
-    if(!skipSetup) {
+    
+    let SKIP_SETUP = false; //!
+    if(!SKIP_SETUP) {
       await k8sClient.applyManifestFromFile('src/jobs/setupEnv.yaml', {
         EXECUTION_ID,
         EXTRACT_DIR,
         BLINQ_TOKEN,
         BUILD_ID: String(new Date().getTime()),
+        NODE_ENV_BLINQ
       });
   
       console.log('🚀 Setup pod launched:', setupPodName); 
@@ -92,6 +98,10 @@ export class ExecutionRunner {
   public setupSocketServer() {
     this.io.on('connection', (socket: Socket) => {
       socket.emit("hello", "world");
+      socket.on('hello', (msg) => {
+        console.log('👋 Received hello from pod:', msg);
+      })
+      
       const podId = socket.handshake.query.podId as string;
       const flowGroupKey = socket.handshake.query.flowGroupKey as string;
       const executionId = socket.handshake.query.executionId as string;

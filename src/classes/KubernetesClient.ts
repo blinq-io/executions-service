@@ -40,6 +40,8 @@ export class KubernetesClient {
       content = content.replace(new RegExp(`<${key}>`, 'g'), value);       // <KEY>
     }
 
+    console.log('🚀 YAML Content', content);
+
 
 
     const obj = k8s.loadYaml(content) as k8s.V1PersistentVolumeClaim | k8s.V1Pod;

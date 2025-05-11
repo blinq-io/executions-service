@@ -18,7 +18,7 @@ if [ -z "$EXECUTION_ID" ]; then
   exit 1
 fi
 
-echo "🌳 ->> $(node -v) 🌳🌳🌲"
+echo "🌲🌳🌳 ->> $(node -v) 🌳🌳🌲"
 
 npm i --save-dev @types/ws
 npm run build
@@ -30,5 +30,5 @@ if [ "$AGENT_MODE" = "true" ]; then
 fi
 
 # Fallback to setup mode
-./environment-setup.sh "$EXTRACT_DIR" "$BLINQ_TOKEN"
+./environment-setup.sh
 exit 0

@@ -31,6 +31,7 @@ export interface Execution extends Document {
   _id: string;
   name: string;
   env: string;
+  branch: string;
   flows: Flow[];
   schedule: Schedule;
   isSingleThreaded: boolean;

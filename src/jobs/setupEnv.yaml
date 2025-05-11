@@ -7,18 +7,17 @@ metadata:
 spec:
   containers:
     - name: setup
-      image: execution-controller:adi1
+      image: execution-controller:jqic81
       imagePullPolicy: Never
       env:
         - name: EXTRACT_DIR
           value: <EXTRACT_DIR>
         - name: BLINQ_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: blinq-secrets
-              key: token
+          value: <BLINQ_TOKEN>
         - name: EXECUTION_ID
           value: "<EXECUTION_ID>"
+        - name: NODE_ENV_BLINQ
+          value: "<NODE_ENV_BLINQ>"
       volumeMounts:
         - name: shared-volume
           mountPath: /app/shared
