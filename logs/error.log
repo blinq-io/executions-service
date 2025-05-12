@@ -1,0 +1,22 @@
+2025-05-12 11:44:48 [error]: Error: Some error
+    at Object.<anonymous> (/Users/yash/Desktop/execution-planner/5May/backend/src/server.ts:7:38)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Module.m._compile (/Users/yash/Desktop/execution-planner/5May/backend/node_modules/ts-node/src/index.ts:1618:23)
+    at node:internal/modules/cjs/loader:1895:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/yash/Desktop/execution-planner/5May/backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:170:5)
+2025-05-12 11:44:56 [error]: Error: Some error
+    at Object.<anonymous> (/Users/yash/Desktop/execution-planner/5May/backend/src/server.ts:7:38)
+    at Module._compile (node:internal/modules/cjs/loader:1730:14)
+    at Module.m._compile (/Users/yash/Desktop/execution-planner/5May/backend/node_modules/ts-node/src/index.ts:1618:23)
+    at node:internal/modules/cjs/loader:1895:10
+    at Object.require.extensions.<computed> [as .ts] (/Users/yash/Desktop/execution-planner/5May/backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1465:32)
+    at Function._load (node:internal/modules/cjs/loader:1282:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:170:5)

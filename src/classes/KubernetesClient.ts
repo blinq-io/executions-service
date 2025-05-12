@@ -3,6 +3,7 @@ import * as k8s from '@kubernetes/client-node';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
+import logger from '../utils/logger';
 
 export class KubernetesClient {
   private k8sApi: k8s.CoreV1Api;
@@ -23,12 +24,12 @@ export class KubernetesClient {
 
   try {
       await this.k8sApi.createNamespacedPod({
-        namespace: 'default', // The namespace of the pod
-        body: manifest        // The manifest of the pod (k8s.V1Pod)
+        namespace: 'default', //? The namespace of the pod
+        body: manifest        //? The manifest of the pod (k8s.V1Pod)
       });
-      console.log(`⭐ Created pod ${manifest.metadata.name}`);
+      logger.info(`⭐ Created pod ${manifest.metadata.name}`);
     } catch (err: any) {
-      console.error('❌ Failed to create pod:', err.body || err.message);
+      logger.error('❌ Failed to create pod:', err.body || err.message);
       throw err;
     }
   }
@@ -40,7 +41,7 @@ export class KubernetesClient {
       content = content.replace(new RegExp(`<${key}>`, 'g'), value);       // <KEY>
     }
 
-    console.log('🚀 YAML Content', content);
+    logger.info('🚀 YAML Content', content);
 
 
 
@@ -48,7 +49,7 @@ export class KubernetesClient {
     if (!obj.kind) {
       throw new Error('Manifest is missing `kind` field.');
     }
-    console.log(`🔍 Applying manifest for ${obj.kind}...`);
+    logger.info(`🔍 Applying manifest for ${obj.kind}...`);
     switch (obj.kind) {
       case 'PersistentVolumeClaim':
         try {
@@ -65,7 +66,7 @@ export class KubernetesClient {
             // swallow parse error
           }
           if (reason === 'AlreadyExists') {
-            console.log(`⚠️ PVC ${obj.metadata?.name} already exists, skipping creation.`);
+            logger.info(`⚠️ PVC ${obj.metadata?.name} already exists, skipping creation.`);
             return;
           }
           throw err;
@@ -86,7 +87,7 @@ export class KubernetesClient {
           }
     
           if (reason === 'AlreadyExists') {
-            console.log(`⚠️ Pod ${obj.metadata?.name} already exists, skipping creation.`);
+            logger.info(`⚠️ Pod ${obj.metadata?.name} already exists, skipping creation.`);
             return;
           }
     
@@ -121,10 +122,10 @@ export class KubernetesClient {
       });
 
       const phase = res.status?.phase;
-      console.log(`🔄 Pod ${podName} status: ${phase}`);
+      logger.info(`🔄 Pod ${podName} status: ${phase}`);
 
       if (phase === 'Succeeded') {
-        console.log(`✅ Setup pod ${podName} completed successfully.`);
+        logger.info(`✅ Setup pod ${podName} completed successfully.`);
         return;
       }
 

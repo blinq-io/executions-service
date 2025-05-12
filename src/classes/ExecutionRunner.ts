@@ -4,9 +4,10 @@ import { ExecutionPodAgent } from './ExecutionPodAgent';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { KubernetesClient } from './KubernetesClient';
 
-import { BACKEND_SOCKET_URL } from '../constants';
-import { generateWorkerYaml } from '../jobs/generateWorkerYaml';
+import { BACKEND_SOCKET_URL, PVC_YAML_PATH, SETUP_YAML_PATH } from '../constants';
+import { generateWorkerYaml } from '../config_files/generateWorkerYaml';
 import { getActiveGroupIndex, getFlowGroupKey, getTasksArray } from '../utils/execData';
+import logger from '../utils/logger';
 
 export class ExecutionRunner {
   private io: SocketIOServer;
@@ -25,13 +26,13 @@ export class ExecutionRunner {
       flow.scenarioGroups.forEach((group, groupIndex) => {
         const flowGroupKey = getFlowGroupKey(this.execution._id, flowIndex, groupIndex);
         this.flowTaskQueues.set(flowGroupKey, getTasksArray(group.scenarios, flowIndex, groupIndex));
-        console.log('🗂️ Initialized task queue for', flowGroupKey, group.scenarios);
+        logger.info('🗂️ Initialized task queue for', flowGroupKey, group.scenarios);
       });
     });
   }
 
   public async start() {
-    console.log(`🚀 Execution ${this.execution.name} starting...`);
+    logger.info(`🚀 Execution ${this.execution.name} starting...`);
     await this.spawnPods();
     this.setupSocketServer();
   }
@@ -46,39 +47,37 @@ export class ExecutionRunner {
     const EXECUTION_ID = this.execution._id; 
     const NODE_ENV_BLINQ = process.env.NODE_ENV_BLINQ || 'dev';
 
-    console.log('🌲🌲🌲🌲🌲 The projectId is', process.env.EXTRACT_DIR, '&', EXTRACT_DIR);
+    logger.info('🌲🌲🌲🌲🌲 The projectId is', process.env.EXTRACT_DIR, '&', EXTRACT_DIR);
 
-    await k8sClient.applyManifestFromFile('src/jobs/pvc.yaml', {
+    await k8sClient.applyManifestFromFile(PVC_YAML_PATH, {
       EXECUTION_ID,
     });
     
     let SKIP_SETUP = false; //!
     if(!SKIP_SETUP) {
-      await k8sClient.applyManifestFromFile('src/jobs/setupEnv.yaml', {
+      await k8sClient.applyManifestFromFile(SETUP_YAML_PATH, {
         EXECUTION_ID,
         EXTRACT_DIR,
         BLINQ_TOKEN,
         BUILD_ID: String(new Date().getTime()),
-        NODE_ENV_BLINQ
+        NODE_ENV_BLINQ,
       });
   
-      console.log('🚀 Setup pod launched:', setupPodName); 
+      logger.info('🚀 Setup pod launched:', setupPodName); 
   
-      console.log(`⏳ Waiting for setup pod ${setupPodName} to complete...`);
+      logger.info(`⏳ Waiting for setup pod ${setupPodName} to complete...`);
       await k8sClient.waitForPodCompletion(setupPodName);
-  
-      // 3. (Optional) delete setup pod after success
       await k8sClient.deletePod(setupPodName);
-      console.log(`🗑️ Setup pod ${setupPodName} deleted`);
+      logger.info(`🗑️ Setup pod ${setupPodName} deleted`);
     } else {
-      console.log(`⚠️ Skipping setup pod for ${setupPodName}`);
+      logger.info(`⚠️ Skipping setup pod for ${setupPodName}`);
     }
 
     this.execution.flows.forEach((flow, flowIndex) => {
       const activeGroupIndex = getActiveGroupIndex(flowIndex);
       const group = flow.scenarioGroups[activeGroupIndex]; 
       const flowGroupKey = getFlowGroupKey(this.execution._id, flowIndex, activeGroupIndex);
-      console.log(`⬆︎ Launching pods for ${flowGroupKey}`);
+      logger.info(`⬆︎ Launching pods for ${flowGroupKey}`);
       for (let i = 0; i < group.threadCount; i++) {
         const podId = `${flowGroupKey}.w${i}`;
         const podSpec = generateWorkerYaml({
@@ -89,7 +88,7 @@ export class ExecutionRunner {
           BLINQ_TOKEN,
           SOCKET_URL: BACKEND_SOCKET_URL,
         });
-        console.log(`🚀 Launching pod ${podId}`);
+        logger.info(`🚀 Launching pod ${podId}`);
         k8sClient.createPodFromYaml(podSpec);
       }
     });
@@ -99,7 +98,7 @@ export class ExecutionRunner {
     this.io.on('connection', (socket: Socket) => {
       socket.emit("hello", "world");
       socket.on('hello', (msg) => {
-        console.log('👋 Received hello from pod:', msg);
+        logger.info('👋 Received hello from pod:', msg);
       })
       
       const podId = socket.handshake.query.podId as string;
@@ -118,15 +117,15 @@ export class ExecutionRunner {
         return;
       }
 
-      console.log(`🔌 Pod ${podId} connected for tasks in ${flowGroupKey}`);
+      logger.info(`🔌 Pod ${podId} connected for tasks in ${flowGroupKey}`);
       const agent = new ExecutionPodAgent(podId, socket);
       this.connectedAgents.set(podId, agent);
 
       socket.on('ready', (e: any) => {
-        console.log('🔥 Recieved', e)
+        logger.info('🔥 Recieved', e)
         const taskQueue = this.flowTaskQueues.get(flowGroupKey);
         if (!taskQueue || taskQueue.length === 0) {
-          console.log(`📭 No tasks left for ${flowGroupKey}`);
+          logger.info(`📭 No tasks left for ${flowGroupKey}`);
           return;
         }
 

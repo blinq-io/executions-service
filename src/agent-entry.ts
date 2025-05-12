@@ -10,13 +10,12 @@ const podId = process.env.POD_ID;
 const flowGroupKey = process.env.FLOW_GROUP_KEY;
 const socketUrl = process.env.SOCKET_URL;
 
-console.log('⚙️ ENV CHECK');
-console.log('EXECUTION_ID:', executionId);
-console.log('EXTRACT_DIR:', extractDir);
-console.log('POD_ID:', podId);
-console.log('FLOW_GROUP_KEY:', flowGroupKey);
-console.log('SOCKET_URL:', socketUrl);
-
+// console.log('⚙️ ENV CHECK');
+// console.log('EXECUTION_ID:', executionId);
+// console.log('EXTRACT_DIR:', extractDir);
+// console.log('POD_ID:', podId);
+// console.log('FLOW_GROUP_KEY:', flowGroupKey);
+// console.log('SOCKET_URL:', socketUrl);
 
 if (!executionId || !extractDir || !podId || !flowGroupKey || !socketUrl) {
   console.error('❌ Missing required environment variables');
@@ -24,7 +23,7 @@ if (!executionId || !extractDir || !podId || !flowGroupKey || !socketUrl) {
 }
 
 const projectPath = path.join('/app/shared/project-dir', extractDir);
-const runsPath = path.join(projectPath, 'runs');
+const runsPath = path.join(projectPath, 'runs');  //! TODO: work on reports and global_test_data logic
 fs.mkdirSync(runsPath, { recursive: true });
 
 console.log(`🔌 Connecting to socket: ${socketUrl}`);
@@ -61,7 +60,6 @@ socket.on('task', (task: Task) => {
   });
 });
 
-
 socket.on('connect', () => {
   console.log(`✅ Connected as ${podId}`);
   setTimeout(() => {
@@ -69,11 +67,11 @@ socket.on('connect', () => {
   }, 1000); // Give the event loop some time
 });
 
-socket.on('hello', (msg) => {
-  console.log('👋 Hello from server:', msg);
-});
-
-socket.emit('hello', 'world');
+//? for testing
+// socket.on('hello', (msg) => {
+//   console.log('👋 Hello from server:', msg);
+// });
+// socket.emit('hello', 'world');
 
 socket.on('disconnect', (reason) => {
   console.warn(`❌ Disconnected: ${reason}`);
@@ -90,10 +88,8 @@ socket.on('error', (err) => {
 socket.on('reconnect_attempt', (attempt) => {
   console.warn(`🔄 Reconnecting... Attempt ${attempt}`);
   socket.emit('ready', { podId, flowGroupKey });
-}
-);
+});
 socket.on('reconnect', (attempt) => {
   console.log(`🔄 Reconnected on attempt ${attempt}`);
   socket.emit('ready', { podId, flowGroupKey });
-}
-);
+});

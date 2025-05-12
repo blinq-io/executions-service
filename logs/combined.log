@@ -1,0 +1,84 @@
+2025-05-12 12:15:15 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 12:15:15 [info]: 🚀 Server running on port 5000
+2025-05-12 12:15:19 [info]: ⚙️ Environment variables:
+2025-05-12 12:15:19 [info]: ✅ Environment variables set:
+2025-05-12 12:15:19 [info]: 🗂️ Initialized task queue for
+2025-05-12 12:15:19 [info]: 🚀 Execution E3 starting...
+2025-05-12 12:15:19 [info]: 🌲🌲🌲🌲🌲 The projectId is
+2025-05-12 12:15:19 [info]: 🚀 YAML Content
+2025-05-12 12:15:19 [info]: 🔍 Applying manifest for PersistentVolumeClaim...
+2025-05-12 12:15:19 [info]: ⚠️ PVC pvc-682170b1ddf79387f2fe974b already exists, skipping creation.
+2025-05-12 12:15:19 [info]: 🚀 YAML Content
+2025-05-12 12:15:19 [info]: 🔍 Applying manifest for Pod...
+2025-05-12 12:15:19 [info]: 🚀 Setup pod launched:
+2025-05-12 12:15:19 [info]: ⏳ Waiting for setup pod setup-682170b1ddf79387f2fe974b to complete...
+2025-05-12 12:15:19 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Pending
+2025-05-12 12:15:24 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Running
+2025-05-12 12:15:29 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Running
+2025-05-12 12:15:34 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Running
+2025-05-12 12:15:39 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Running
+2025-05-12 12:15:44 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Running
+2025-05-12 12:15:49 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Running
+2025-05-12 12:15:54 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Running
+2025-05-12 12:15:59 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Running
+2025-05-12 12:16:04 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Running
+2025-05-12 12:16:09 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Running
+2025-05-12 12:16:14 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Succeeded
+2025-05-12 12:16:14 [info]: ✅ Setup pod setup-682170b1ddf79387f2fe974b completed successfully.
+2025-05-12 12:16:14 [info]: 🗑️ Setup pod setup-682170b1ddf79387f2fe974b deleted
+2025-05-12 12:16:14 [info]: ⬆︎ Launching pods for 682170b1ddf79387f2fe974b.flow0.sg0
+2025-05-12 12:16:14 [info]: 🚀 Launching pod 682170b1ddf79387f2fe974b.flow0.sg0.w0
+2025-05-12 12:16:14 [info]: ⭐ Created pod worker-682170b1ddf79387f2fe974b.flow0.sg0.w0
+2025-05-12 12:16:18 [info]: 🔌 Pod 682170b1ddf79387f2fe974b.flow0.sg0.w0 connected for tasks in 682170b1ddf79387f2fe974b.flow0.sg0
+2025-05-12 12:16:19 [info]: 🔥 Recieved
+2025-05-12 12:16:20 [info]: 🔥 Recieved
+2025-05-12 12:16:20 [info]: 📭 No tasks left for 682170b1ddf79387f2fe974b.flow0.sg0
+2025-05-12 12:19:06 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 12:19:06 [info]: 🚀 Server running on port 5000
+2025-05-12 12:19:35 [info]: ⚙️ Environment variables:
+2025-05-12 12:19:35 [info]: ✅ Environment variables set:
+2025-05-12 12:19:35 [info]: 🗂️ Initialized task queue for
+2025-05-12 12:19:35 [info]: 🚀 Execution E3 starting...
+2025-05-12 12:19:35 [info]: 🌲🌲🌲🌲🌲 The projectId is
+2025-05-12 12:19:35 [info]: 🚀 YAML Content
+2025-05-12 12:19:35 [info]: 🔍 Applying manifest for PersistentVolumeClaim...
+2025-05-12 12:19:35 [info]: 🚀 YAML Content
+2025-05-12 12:19:35 [info]: 🔍 Applying manifest for Pod...
+2025-05-12 12:19:35 [info]: 🚀 Setup pod launched:
+2025-05-12 12:19:35 [info]: ⏳ Waiting for setup pod setup-682170b1ddf79387f2fe974b to complete...
+2025-05-12 12:19:35 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Pending
+2025-05-12 12:19:40 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Running
+2025-05-12 12:19:45 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Running
+2025-05-12 12:19:50 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Running
+2025-05-12 12:19:55 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Running
+2025-05-12 12:20:00 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Running
+2025-05-12 12:20:05 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Running
+2025-05-12 12:20:10 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Running
+2025-05-12 12:20:15 [info]: 🔄 Pod setup-682170b1ddf79387f2fe974b status: Succeeded
+2025-05-12 12:20:15 [info]: ✅ Setup pod setup-682170b1ddf79387f2fe974b completed successfully.
+2025-05-12 12:20:15 [info]: 🗑️ Setup pod setup-682170b1ddf79387f2fe974b deleted
+2025-05-12 12:20:15 [info]: ⬆︎ Launching pods for 682170b1ddf79387f2fe974b.flow0.sg0
+2025-05-12 12:20:15 [info]: 🚀 Launching pod 682170b1ddf79387f2fe974b.flow0.sg0.w0
+2025-05-12 12:20:15 [info]: ⭐ Created pod worker-682170b1ddf79387f2fe974b.flow0.sg0.w0
+2025-05-12 12:20:19 [info]: 🔌 Pod 682170b1ddf79387f2fe974b.flow0.sg0.w0 connected for tasks in 682170b1ddf79387f2fe974b.flow0.sg0
+2025-05-12 12:20:20 [info]: 🔥 Recieved
+2025-05-12 12:20:53 [info]: 🔥 Recieved
+2025-05-12 12:20:53 [info]: 📭 No tasks left for 682170b1ddf79387f2fe974b.flow0.sg0
+2025-05-12 12:20:58 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 12:20:58 [info]: 🚀 Server running on port 5000
+2025-05-12 12:21:21 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 12:21:22 [info]: 🚀 Server running on port 5000
+2025-05-12 12:21:32 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 12:21:32 [info]: 🚀 Server running on port 5000
+2025-05-12 12:22:18 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 12:22:19 [info]: 🚀 Server running on port 5000
+2025-05-12 12:22:22 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 12:22:22 [info]: 🚀 Server running on port 5000
+2025-05-12 12:22:24 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 12:22:24 [info]: 🚀 Server running on port 5000
+2025-05-12 12:22:36 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 12:22:37 [info]: 🚀 Server running on port 5000
+2025-05-12 12:24:29 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 12:24:29 [info]: 🚀 Server running on port 5000
+2025-05-12 12:24:35 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 12:24:35 [info]: 🚀 Server running on port 5000

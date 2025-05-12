@@ -18,8 +18,6 @@ if [ -z "$EXECUTION_ID" ]; then
   exit 1
 fi
 
-echo "🌲🌳🌳 ->> $(node -v) 🌳🌳🌲"
-
 npm i --save-dev @types/ws
 npm run build
 

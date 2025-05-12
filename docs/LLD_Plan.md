@@ -1,7 +1,5 @@
-U -> UI
-B -> execution-service (backend)
-K -> K8s
-P -> Docker pods (agents)
+Let: U -> UI | B -> execution-service (backend) | K -> K8s | P -> Docker pods (agents)
+
 1. U: user clicks run now for any execution
 2. B: /executions/run/:id is triggered
 3. B: runner = new ExecutionRunner(e, io) and runner.start

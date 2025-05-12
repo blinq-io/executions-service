@@ -4,15 +4,16 @@ import { ExecutionRunner } from '../classes/ExecutionRunner';
 import { THREAD_LIMIT } from '../constants';
 import { io } from '../app';
 import { updateStream } from '../utils/sse';
+import logger from '../utils/logger';
 
 export const createExecution = async (req: Request, res: Response) => {
   try {
     const execution = new ExecutionModel(req.body);
     await execution.save();
 
-    // console.log('🚀 Sending update via stream')
+    // logger.info('🚀 Sending update via stream')
     // await updateStream();
-    // console.log('🚀 Update sent via stream')
+    // logger.info('🚀 Update sent via stream')
 
     res.status(201).json(execution);
   } catch (error) {
@@ -28,14 +29,14 @@ export const runExecution = async (req: Request, res: Response) => {
 
   const environmentVariables = req.body;
 
-  console.log('⚙️ Environment variables:', environmentVariables);
+  logger.info('⚙️ Environment variables:', environmentVariables);
   
   // set the process.env variables
   for (const [key, value] of Object.entries(environmentVariables)) {
     process.env[key] = String(value);
   }
 
-  console.log('✅ Environment variables set:', {
+  logger.info('✅ Environment variables set:', {
     token: process.env.BLINQ_TOKEN, 
     projectId: process.env.EXTRACT_DIR
   });

@@ -1,3 +1,7 @@
+//? Tried to implement a server-sent events (SSE) stream for real-time updates.
+//? but it seems to be a bit tricky with Express and Socket.IO.
+//? The stream is set up to send updates to the client whenever there are changes in the execution data.
+//TODO Later
 import { Response } from 'express';
 import executionModel from '../models/execution.model';
 
