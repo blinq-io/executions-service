@@ -82,3 +82,217 @@
 2025-05-12 12:24:29 [info]: 🚀 Server running on port 5000
 2025-05-12 12:24:35 [info]: 🚀 HTTP Server running on port 5000
 2025-05-12 12:24:35 [info]: 🚀 Server running on port 5000
+2025-05-12 12:28:10 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 12:28:11 [info]: 🚀 Server running on port 5000
+2025-05-12 12:35:32 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 12:35:34 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 12:35:35 [info]: 🚀 Server running on port 5000
+2025-05-12 12:35:44 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 12:35:44 [info]: 🚀 Server running on port 5000
+2025-05-12 14:14:28 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 14:14:29 [info]: 🚀 Server running on port 5000
+2025-05-12 14:17:14 [info]: ⚙️ Environment variables:
+2025-05-12 14:17:14 [info]: ✅ Environment variables set:
+2025-05-12 14:17:14 [info]: 🗂️ Initialized task queue for
+2025-05-12 14:17:14 [info]: 🚀 Execution Verify and login flow starting...
+2025-05-12 14:17:14 [info]: 🌲🌲🌲🌲🌲 The projectId is
+2025-05-12 14:17:14 [info]: 🚀 YAML Content
+2025-05-12 14:17:14 [info]: 🔍 Applying manifest for PersistentVolumeClaim...
+2025-05-12 14:17:14 [info]: 🚀 YAML Content
+2025-05-12 14:17:14 [info]: 🔍 Applying manifest for Pod...
+2025-05-12 14:17:14 [info]: 🚀 Setup pod launched:
+2025-05-12 14:17:14 [info]: ⏳ Waiting for setup pod setup-6821b5612b6f2edb67543a4f to complete...
+2025-05-12 14:17:14 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Pending
+2025-05-12 14:17:19 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:17:24 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:17:29 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:17:34 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:17:39 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:17:44 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:17:49 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:17:54 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:17:59 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:18:04 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:18:09 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:18:14 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:18:19 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:18:24 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:18:29 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:18:34 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:18:39 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:18:44 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:18:49 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:18:54 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:18:59 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:19:05 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:19:10 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:21:48 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 14:21:48 [info]: 🚀 Server running on port 5000
+2025-05-12 14:21:52 [info]: ⚙️ Environment variables:
+2025-05-12 14:21:52 [info]: ✅ Environment variables set:
+2025-05-12 14:21:52 [info]: 🗂️ Initialized task queue for
+2025-05-12 14:21:52 [info]: 🚀 Execution Verify and login flow starting...
+2025-05-12 14:21:52 [info]: 🌲🌲🌲🌲🌲 The projectId is
+2025-05-12 14:21:52 [info]: 🚀 YAML Content
+2025-05-12 14:21:52 [info]: 🔍 Applying manifest for PersistentVolumeClaim...
+2025-05-12 14:21:52 [info]: ⚠️ PVC pvc-6821b5612b6f2edb67543a4f already exists, skipping creation.
+2025-05-12 14:21:52 [info]: 🚀 YAML Content
+2025-05-12 14:21:52 [info]: 🔍 Applying manifest for Pod...
+2025-05-12 14:21:52 [info]: 🚀 Setup pod launched:
+2025-05-12 14:21:52 [info]: ⏳ Waiting for setup pod setup-6821b5612b6f2edb67543a4f to complete...
+2025-05-12 14:21:52 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Pending
+2025-05-12 14:21:57 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:22:02 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:22:07 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Succeeded
+2025-05-12 14:22:07 [info]: ✅ Setup pod setup-6821b5612b6f2edb67543a4f completed successfully.
+2025-05-12 14:22:07 [info]: 🗑️ Setup pod setup-6821b5612b6f2edb67543a4f deleted
+2025-05-12 14:22:07 [info]: ⬆︎ Launching pods for 6821b5612b6f2edb67543a4f.flow0.sg0
+2025-05-12 14:23:13 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 14:23:13 [info]: 🚀 Server running on port 5000
+2025-05-12 14:23:15 [info]: ⚙️ Environment variables:
+2025-05-12 14:23:15 [info]: ✅ Environment variables set:
+2025-05-12 14:23:15 [info]: 🗂️ Initialized task queue for
+2025-05-12 14:23:15 [info]: 🚀 Execution Verify and login flow starting...
+2025-05-12 14:23:15 [info]: 🌲🌲🌲🌲🌲 The projectId is
+2025-05-12 14:23:15 [info]: 🚀 YAML Content
+2025-05-12 14:23:15 [info]: 🔍 Applying manifest for PersistentVolumeClaim...
+2025-05-12 14:23:15 [info]: 🚀 YAML Content
+2025-05-12 14:23:15 [info]: 🔍 Applying manifest for Pod...
+2025-05-12 14:23:15 [info]: 🚀 Setup pod launched:
+2025-05-12 14:23:15 [info]: ⏳ Waiting for setup pod setup-6821b5612b6f2edb67543a4f to complete...
+2025-05-12 14:23:15 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Pending
+2025-05-12 14:23:20 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:23:25 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:23:30 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:23:35 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:23:40 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:23:45 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:23:50 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Running
+2025-05-12 14:23:55 [info]: 🔄 Pod setup-6821b5612b6f2edb67543a4f status: Succeeded
+2025-05-12 14:23:55 [info]: ✅ Setup pod setup-6821b5612b6f2edb67543a4f completed successfully.
+2025-05-12 14:23:55 [info]: 🗑️ Setup pod setup-6821b5612b6f2edb67543a4f deleted
+2025-05-12 14:23:55 [info]: ⬆︎ Launching pods for 6821b5612b6f2edb67543a4f.flow0.sg0
+2025-05-12 14:44:07 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 14:44:07 [info]: 🚀 Server running on port 5000
+2025-05-12 14:44:26 [info]: ⚙️ Environment variables:
+2025-05-12 14:44:26 [info]: ✅ Environment variables set:
+2025-05-12 14:44:26 [info]: 🗂️ Initialized task queue for
+2025-05-12 14:44:26 [info]: 🚀 Execution E1 starting...
+2025-05-12 14:44:26 [info]: 🌲🌲🌲🌲🌲 The projectId is
+2025-05-12 14:44:26 [info]: 🚀 YAML Content
+2025-05-12 14:44:26 [info]: 🔍 Applying manifest for PersistentVolumeClaim...
+2025-05-12 14:44:26 [info]: 🚀 YAML Content
+2025-05-12 14:44:26 [info]: 🔍 Applying manifest for Pod...
+2025-05-12 14:44:26 [info]: 🚀 Setup pod launched:
+2025-05-12 14:44:26 [info]: ⏳ Waiting for setup pod setup-681f5cec9074438ede56819f to complete...
+2025-05-12 14:44:26 [info]: 🔄 Pod setup-681f5cec9074438ede56819f status: Pending
+2025-05-12 14:44:31 [info]: 🔄 Pod setup-681f5cec9074438ede56819f status: Running
+2025-05-12 14:44:36 [info]: 🔄 Pod setup-681f5cec9074438ede56819f status: Running
+2025-05-12 14:44:41 [info]: 🔄 Pod setup-681f5cec9074438ede56819f status: Running
+2025-05-12 14:44:46 [info]: 🔄 Pod setup-681f5cec9074438ede56819f status: Running
+2025-05-12 14:44:51 [info]: 🔄 Pod setup-681f5cec9074438ede56819f status: Running
+2025-05-12 14:44:56 [info]: 🔄 Pod setup-681f5cec9074438ede56819f status: Running
+2025-05-12 14:45:01 [info]: 🔄 Pod setup-681f5cec9074438ede56819f status: Succeeded
+2025-05-12 14:45:01 [info]: ✅ Setup pod setup-681f5cec9074438ede56819f completed successfully.
+2025-05-12 14:45:01 [info]: 🗑️ Setup pod setup-681f5cec9074438ede56819f deleted
+2025-05-12 14:45:01 [info]: ⬆︎ Launching pods for 681f5cec9074438ede56819f.flow0.sg0
+2025-05-12 14:45:01 [info]: 🚀 Launching pod 681f5cec9074438ede56819f.flow0.sg0.w0
+2025-05-12 14:45:01 [info]: ⭐ Created pod worker-681f5cec9074438ede56819f.flow0.sg0.w0
+2025-05-12 14:45:05 [info]: 🔌 Pod 681f5cec9074438ede56819f.flow0.sg0.w0 connected for tasks in 681f5cec9074438ede56819f.flow0.sg0
+2025-05-12 14:45:06 [info]: 🔥 Recieved
+2025-05-12 14:45:12 [info]: 🔥 Recieved
+2025-05-12 14:45:12 [info]: 📭 No tasks left for 681f5cec9074438ede56819f.flow0.sg0
+2025-05-12 14:47:01 [info]: ⚙️ Environment variables:
+2025-05-12 14:47:01 [info]: ✅ Environment variables set:
+2025-05-12 14:47:01 [info]: 🗂️ Initialized task queue for
+2025-05-12 14:47:01 [info]: 🚀 Execution E1 starting...
+2025-05-12 14:47:01 [info]: 🌲🌲🌲🌲🌲 The projectId is
+2025-05-12 14:47:01 [info]: 🚀 YAML Content
+2025-05-12 14:47:01 [info]: 🔍 Applying manifest for PersistentVolumeClaim...
+2025-05-12 14:47:01 [info]: ⚠️ PVC pvc-681f5cec9074438ede56819f already exists, skipping creation.
+2025-05-12 14:47:01 [info]: 🚀 YAML Content
+2025-05-12 14:47:01 [info]: 🔍 Applying manifest for Pod...
+2025-05-12 14:47:01 [info]: 🚀 Setup pod launched:
+2025-05-12 14:47:01 [info]: ⏳ Waiting for setup pod setup-681f5cec9074438ede56819f to complete...
+2025-05-12 14:47:01 [info]: 🔄 Pod setup-681f5cec9074438ede56819f status: Pending
+2025-05-12 14:47:06 [info]: 🔄 Pod setup-681f5cec9074438ede56819f status: Running
+2025-05-12 14:47:11 [info]: 🔄 Pod setup-681f5cec9074438ede56819f status: Running
+2025-05-12 14:47:16 [info]: 🔄 Pod setup-681f5cec9074438ede56819f status: Succeeded
+2025-05-12 14:47:16 [info]: ✅ Setup pod setup-681f5cec9074438ede56819f completed successfully.
+2025-05-12 14:47:16 [info]: 🗑️ Setup pod setup-681f5cec9074438ede56819f deleted
+2025-05-12 14:47:16 [info]: ⬆︎ Launching pods for 681f5cec9074438ede56819f.flow0.sg0
+2025-05-12 14:47:16 [info]: 🚀 Launching pod 681f5cec9074438ede56819f.flow0.sg0.w0
+2025-05-12 14:47:16 [error]: ❌ Failed to create pod:
+2025-05-12 16:04:56 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 16:04:57 [info]: 🚀 Server running on port 5000
+2025-05-12 16:45:49 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 16:45:50 [info]: 🚀 Server running on port 5000
+2025-05-12 16:45:55 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 16:45:55 [info]: 🚀 Server running on port 5000
+2025-05-12 16:46:05 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 16:46:05 [info]: 🚀 Server running on port 5000
+2025-05-12 16:47:16 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 16:47:17 [info]: 🚀 Server running on port 5000
+2025-05-12 16:47:29 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 16:47:29 [info]: 🚀 Server running on port 5000
+2025-05-12 16:47:55 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 16:47:55 [info]: 🚀 Server running on port 5000
+2025-05-12 16:48:05 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 16:48:05 [info]: 🚀 Server running on port 5000
+2025-05-12 16:48:07 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 16:48:08 [info]: 🚀 Server running on port 5000
+2025-05-12 16:48:14 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 16:48:15 [info]: 🚀 Server running on port 5000
+2025-05-12 16:48:17 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 16:48:17 [info]: 🚀 Server running on port 5000
+2025-05-12 16:48:25 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 16:48:26 [info]: 🚀 Server running on port 5000
+2025-05-12 16:49:12 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 16:49:18 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 16:49:19 [info]: 🚀 Server running on port 5000
+2025-05-12 16:49:30 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 16:49:31 [info]: 🚀 Server running on port 5000
+2025-05-12 17:10:55 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 17:10:56 [info]: 🚀 Server running on port 5000
+2025-05-12 17:11:42 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 17:11:43 [info]: 🚀 Server running on port 5000
+2025-05-12 19:49:06 [info]: 🚀 HTTP Server running on port 5000
+2025-05-12 19:49:06 [info]: 🚀 Server running on port 5000
+2025-05-13 09:45:47 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 09:45:47 [info]: 🚀 Server running on port 5000
+2025-05-13 18:25:45 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:25:45 [info]: 🚀 Server running on port 5000
+2025-05-13 18:26:04 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:26:05 [info]: 🚀 Server running on port 5000
+2025-05-13 18:27:51 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:27:51 [info]: 🚀 Server running on port 5000
+2025-05-13 18:27:57 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:27:57 [info]: 🚀 Server running on port 5000
+2025-05-13 18:28:03 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:28:04 [info]: 🚀 Server running on port 5000
+2025-05-13 18:28:08 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:28:08 [info]: 🚀 Server running on port 5000
+2025-05-13 18:29:15 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:29:16 [info]: 🚀 Server running on port 5000
+2025-05-13 18:29:21 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:29:22 [info]: 🚀 Server running on port 5000
+2025-05-13 18:29:26 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:29:29 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:29:34 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:29:34 [info]: 🚀 Server running on port 5000
+2025-05-13 18:29:42 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:29:43 [info]: 🚀 Server running on port 5000
+2025-05-13 18:30:30 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:30:30 [info]: 🚀 Server running on port 5000
+2025-05-13 18:30:36 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:30:37 [info]: 🚀 Server running on port 5000
+2025-05-13 18:30:42 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:30:43 [info]: 🚀 Server running on port 5000
+2025-05-13 18:30:55 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:30:55 [info]: 🚀 Server running on port 5000
+2025-05-13 18:31:16 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:31:16 [info]: 🚀 Server running on port 5000
+2025-05-13 18:31:18 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:31:19 [info]: 🚀 Server running on port 5000
+2025-05-13 18:31:21 [info]: 🚀 HTTP Server running on port 5000
+2025-05-13 18:31:21 [info]: 🚀 Server running on port 5000

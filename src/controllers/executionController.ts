@@ -47,25 +47,44 @@ export const runExecution = async (req: Request, res: Response) => {
 };
 
 export const getAllExecutions = async (req: Request, res: Response) => {
-  const executions = await ExecutionModel.find();
-  res.json(executions);
-}
+  try {
+    const { projectId } = req.query;
+
+    if (!projectId || typeof projectId !== 'string') {
+      return res.status(400).json({ error: 'Missing or invalid projectId' });
+    }
+
+    const executions = await ExecutionModel.find({ projectId });
+    res.json(executions);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch executions' });
+  }
+};
+
 
 export const getFreeThreadCount = async (req: Request, res: Response) => {
-  const executions = await ExecutionModel.find();
+  const { projectId } = req.query;
+
+  const executions = await ExecutionModel.find({ projectId });
   const freeThreadCount = THREAD_LIMIT - executions.reduce((acc, execution) => {
     const threadCount = execution.flows.reduce((sum, flow) => sum + Math.max(...flow.scenarioGroups.map((sg) => sg.threadCount)), 0);
     return acc + (execution.isSingleThreaded ? 1 : threadCount);
   }, 0);
+  console.log('🔋 Free thread count:', freeThreadCount, JSON.stringify(executions, null, 2));
   res.send({ freeThreadCount });
 };
 
 export const getExecutionById = async (req: Request, res: Response) => {
   const execution = await ExecutionModel.findById(req.params.id);
   if (!execution) return res.status(404).json({ error: 'Execution not found' });
+  console.log('Execution found:', execution);
   res.json(execution);
 };
 export const updateExecution = async (req: Request, res: Response) => {
+  console.error('💎💎💎💎💎💎💎💎💎💎💎💎💎💎v', req.params.id);
+  if(req.params.id === undefined) {
+    return res.status(400).json({ error: 'Execution ID is required' });
+  }
   const execution = await ExecutionModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
   if (!execution) return res.status(404).json({ error: 'Execution not found' });
   res.json(execution);
@@ -75,6 +94,64 @@ export const deleteExecution = async (req: Request, res: Response) => {
   if (!execution) return res.status(404).json({ error: 'Execution not found' });
   res.json({ message: 'Execution deleted' });
 }
+
+export const deleteFlow = async (req: Request, res: Response) => {
+  try {
+    const execution = await ExecutionModel.findById(req.params.id);
+    if (!execution) {
+      return res.status(404).json({ error: 'Execution not found' });
+    }
+
+    const flowIndex = parseInt(req.params.flowIndex, 10);
+    if (isNaN(flowIndex) || flowIndex < 0 || flowIndex >= execution.flows.length) {
+      return res.status(400).json({ error: 'Invalid flow index' });
+    }
+
+    execution.flows.splice(flowIndex, 1);
+    await execution.save();
+
+    res.json({ message: 'Flow deleted successfully', execution });
+  } catch (error) {
+    console.error('Error deleting flow:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // export const getExecutionLogs = async (req: Request, res: Response) => {
 //   const execution = await ExecutionModel.findById(req.params.id);
