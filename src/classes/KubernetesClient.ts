@@ -29,7 +29,7 @@ export class KubernetesClient {
         namespace: 'default',
         body: manifest
       });
-      logger.info(`⭐ Created pod ${manifest.metadata.name}`);
+      console.log(`⭐ Created pod ${manifest.metadata.name}`);
     } catch (err: any) {
       logger.error('❌ Failed to create pod:', err.body || err.message);
       throw err;
@@ -43,14 +43,12 @@ export class KubernetesClient {
       content = content.replace(new RegExp(`<${key}>`, 'g'), value);       // <KEY>
     }
 
-    logger.info('🚀 YAML Content', content);
-
     const obj = k8s.loadYaml(content) as k8s.V1PersistentVolumeClaim | k8s.V1Pod;
     if (!obj.kind) {
       throw new Error('Manifest is missing `kind` field.');
     }
 
-    logger.info(`🔍 Applying manifest for ${obj.kind}...`);
+    console.log(`🔍 Applying manifest for ${obj.kind}...`);
 
     switch (obj.kind) {
       case 'PersistentVolumeClaim':
@@ -62,7 +60,7 @@ export class KubernetesClient {
         } catch (err: any) {
           const reason = this.extractReason(err);
           if (reason === 'AlreadyExists') {
-            logger.info(`⚠️ PVC ${obj.metadata?.name} already exists, skipping creation.`);
+            console.log(`⚠️ PVC ${obj.metadata?.name} already exists, skipping creation.`);
             return;
           }
           throw err;
@@ -77,7 +75,7 @@ export class KubernetesClient {
         } catch (err: any) {
           const reason = this.extractReason(err);
           if (reason === 'AlreadyExists') {
-            logger.info(`⚠️ Pod ${obj.metadata?.name} already exists, skipping creation.`);
+            console.log(`⚠️ Pod ${obj.metadata?.name} already exists, skipping creation.`);
             return;
           }
           throw err;
@@ -137,10 +135,10 @@ export class KubernetesClient {
       });
 
       const phase = res.status?.phase;
-      logger.info(`🔄 Pod ${podName} status: ${phase}`);
+      console.log(`🔄 Pod ${podName} status: ${phase}`);
 
       if (phase === 'Succeeded') {
-        logger.info(`✅ Setup pod ${podName} completed successfully.`);
+        console.log(`✅ Setup pod ${podName} completed successfully.`);
         return;
       }
 

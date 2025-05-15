@@ -2,7 +2,7 @@ import { io } from 'socket.io-client';
 import { exec } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
-import { Task } from './models/execution.model';
+import { Task, TaskResult } from './models/execution.model';
 
 const executionId = process.env.EXECUTION_ID;
 const extractDir = process.env.EXTRACT_DIR;
@@ -53,9 +53,11 @@ socket.on('task', (task: Task) => {
     socket.emit('task-log', { taskId: task.id, type: 'stderr', data });
   });
 
-  child.on('close', (code) => {
+  child.on('close', async (code) => {
     console.log(`✅ Task ${task.id} completed with code ${code}`);
-    socket.emit('task-complete', { taskId: task.id, exitCode: code });
+    const taskResult: TaskResult = { taskId: task.id, exitCode: code, task };
+    socket.emit('task-complete', taskResult);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     socket.emit('ready', { podId, flowGroupKey });
   });
 });
@@ -67,18 +69,24 @@ socket.on('connect', () => {
   }, 1000); // Give the event loop some time
 });
 
+socket.on('shutdown', () => {
+  console.log(`🛑 Shutdown signal received. Disconnecting...`);
+  socket.disconnect();
+  process.exit(0);
+})
+
 //? for testing
-// socket.on('hello', (msg) => {
-//   console.log('👋 Hello from server:', msg);
-// });
-// socket.emit('hello', 'world');
+socket.on('hello', (msg) => {
+  console.log('👋 Hello from server:', msg);
+});
+socket.emit('hello', 'world');
 
 socket.on('disconnect', (reason) => {
   console.warn(`❌ Disconnected: ${reason}`);
   process.exit(1);
 });
 socket.on('connect_error', (err) => {
-  console.error('❌ Socket connection error:', err.message);
+  console.error('❌ Socket connection error:', err.message, err);
   process.exit(1);
 });
 socket.on('error', (err) => {

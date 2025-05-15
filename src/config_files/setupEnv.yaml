@@ -7,7 +7,7 @@ metadata:
 spec:
   containers:
     - name: setup
-      image: execution-controller:dfs23
+      image: execution-controller:asdf231
       imagePullPolicy: Never
       env:
         - name: EXTRACT_DIR

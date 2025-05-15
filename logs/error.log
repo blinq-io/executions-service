@@ -21,3 +21,9 @@
     at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)
     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:170:5)
 2025-05-12 14:47:16 [error]: ❌ Failed to create pod:
+❌ Failed to create pod:
+❌ Failed to create pod:
+❌ Failed to create pod:
+❌ Failed to create pod:
+❌ Failed to create pod:
+❌ Failed to create pod:

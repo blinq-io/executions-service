@@ -510,3 +510,261 @@
 2025-05-15 14:22:14 [info]: 🚀 HTTP Server running on port 5000
 2025-05-15 14:22:26 [info]: 🚀 HTTP Server running on port 5000
 2025-05-15 14:22:26 [info]: 🚀 Server running on port 5000
+2025-05-15 14:25:03 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 14:25:03 [info]: 🚀 Server running on port 5000
+2025-05-15 14:25:20 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 14:25:20 [info]: 🚀 Server running on port 5000
+2025-05-15 14:29:51 [info]: ⚙️ Environment variables:
+2025-05-15 14:29:51 [info]: 🗂️ Initialized task queue for
+2025-05-15 14:29:51 [info]: 🗂️ Initialized task queue for
+2025-05-15 14:29:51 [info]: 🗂️ Initialized task queue for
+2025-05-15 14:29:51 [info]: 🗂️ Initialized task queue for
+2025-05-15 14:29:51 [info]: 🗂️ Initialized task queue for
+2025-05-15 14:29:51 [info]: 🗂️ Initialized task queue for
+2025-05-15 14:29:51 [info]: 🗂️ Initialized task queue for
+2025-05-15 14:29:51 [info]: 🗂️ Initialized task queue for
+2025-05-15 14:29:51 [info]: 🗂️ Initialized task queue for
+2025-05-15 14:29:51 [info]: 🗂️ Initialized task queue for
+2025-05-15 14:29:51 [info]: 🗂️ Initialized task queue for
+2025-05-15 14:29:51 [info]: 🚀 Execution E2 starting...
+2025-05-15 14:29:51 [info]: 🌲🌲🌲🌲🌲 The projectId is
+2025-05-15 14:29:51 [info]: 🚀 YAML Content
+2025-05-15 14:29:51 [info]: 🔍 Applying manifest for PersistentVolumeClaim...
+2025-05-15 14:29:51 [info]: 🚀 YAML Content
+2025-05-15 14:29:51 [info]: 🔍 Applying manifest for Pod...
+2025-05-15 14:29:51 [info]: 🚀 Setup pod launched:
+2025-05-15 14:29:51 [info]: ⏳ Waiting for setup pod setup-6824974c57dcbb2349d25366 to complete...
+2025-05-15 14:29:51 [info]: 🔄 Pod setup-6824974c57dcbb2349d25366 status: Pending
+2025-05-15 14:29:56 [info]: 🔄 Pod setup-6824974c57dcbb2349d25366 status: Running
+2025-05-15 14:30:01 [info]: 🔄 Pod setup-6824974c57dcbb2349d25366 status: Running
+2025-05-15 14:30:06 [info]: 🔄 Pod setup-6824974c57dcbb2349d25366 status: Running
+2025-05-15 14:30:11 [info]: 🔄 Pod setup-6824974c57dcbb2349d25366 status: Running
+2025-05-15 14:30:16 [info]: 🔄 Pod setup-6824974c57dcbb2349d25366 status: Running
+2025-05-15 14:30:21 [info]: 🔄 Pod setup-6824974c57dcbb2349d25366 status: Running
+2025-05-15 14:30:26 [info]: 🔄 Pod setup-6824974c57dcbb2349d25366 status: Running
+2025-05-15 14:30:31 [info]: 🔄 Pod setup-6824974c57dcbb2349d25366 status: Running
+2025-05-15 14:30:36 [info]: 🔄 Pod setup-6824974c57dcbb2349d25366 status: Running
+2025-05-15 14:30:41 [info]: 🔄 Pod setup-6824974c57dcbb2349d25366 status: Running
+2025-05-15 14:30:46 [info]: 🔄 Pod setup-6824974c57dcbb2349d25366 status: Running
+2025-05-15 14:30:51 [info]: 🔄 Pod setup-6824974c57dcbb2349d25366 status: Succeeded
+2025-05-15 14:30:51 [info]: ✅ Setup pod setup-6824974c57dcbb2349d25366 completed successfully.
+2025-05-15 14:30:51 [info]: 🗑️ Setup pod setup-6824974c57dcbb2349d25366 deleted
+2025-05-15 14:30:51 [info]: ⬆︎ Launching pods for 6824974c57dcbb2349d25366.flow0.sg0
+2025-05-15 14:30:51 [info]: ⬆︎ Launching pods for 6824974c57dcbb2349d25366.flow1.sg0
+2025-05-15 14:30:51 [info]: ⬆︎ Launching pods for 6824974c57dcbb2349d25366.flow2.sg0
+2025-05-15 14:30:51 [info]: ⬆︎ Launching pods for 6824974c57dcbb2349d25366.flow3.sg0
+2025-05-15 14:30:51 [info]: ⬆︎ Launching pods for 6824974c57dcbb2349d25366.flow4.sg0
+2025-05-15 14:30:51 [info]: ⬆︎ Launching pods for 6824974c57dcbb2349d25366.flow5.sg0
+2025-05-15 14:30:51 [info]: ⬆︎ Launching pods for 6824974c57dcbb2349d25366.flow6.sg0
+2025-05-15 14:30:51 [info]: ⬆︎ Launching pods for 6824974c57dcbb2349d25366.flow7.sg0
+2025-05-15 14:30:51 [info]: ⬆︎ Launching pods for 6824974c57dcbb2349d25366.flow8.sg0
+2025-05-15 14:30:51 [info]: ⬆︎ Launching pods for 6824974c57dcbb2349d25366.flow9.sg0
+2025-05-15 14:30:51 [info]: ⬆︎ Launching pods for 6824974c57dcbb2349d25366.flow10.sg0
+2025-05-15 14:31:47 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 14:31:47 [info]: 🚀 Server running on port 5000
+2025-05-15 14:35:41 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 14:35:42 [info]: 🚀 Server running on port 5000
+2025-05-15 14:39:25 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 14:39:26 [info]: 🚀 Server running on port 5000
+2025-05-15 14:41:09 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 14:41:09 [info]: 🚀 Server running on port 5000
+2025-05-15 14:41:15 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 14:41:18 [info]: 🚀 Server running on port 5000
+2025-05-15 14:41:27 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 14:41:27 [info]: 🚀 Server running on port 5000
+2025-05-15 14:48:39 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 14:48:40 [info]: 🚀 Server running on port 5000
+2025-05-15 14:48:47 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 14:48:48 [info]: 🚀 Server running on port 5000
+2025-05-15 14:51:27 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 14:51:28 [info]: 🚀 Server running on port 5000
+2025-05-15 14:52:12 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 14:52:12 [info]: 🚀 Server running on port 5000
+2025-05-15 14:52:45 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 14:52:45 [info]: 🚀 Server running on port 5000
+2025-05-15 14:53:03 [info]: ⚙️ Environment variables:
+2025-05-15 14:53:03 [info]: 🗂️ Initialized task queue for
+2025-05-15 14:53:03 [info]: 🗂️ Initialized task queue for
+2025-05-15 14:53:03 [info]: 🚀 Execution E1 starting...
+2025-05-15 14:53:03 [info]: 🌲🌲🌲🌲🌲 The projectId is
+2025-05-15 14:53:03 [info]: 🚀 YAML Content
+2025-05-15 14:53:03 [info]: 🔍 Applying manifest for PersistentVolumeClaim...
+2025-05-15 14:53:03 [info]: ⚠️ PVC pvc-6824804f1f29cb1558a4d3be already exists, skipping creation.
+2025-05-15 14:53:03 [info]: 🚀 YAML Content
+2025-05-15 14:53:03 [info]: 🔍 Applying manifest for Pod...
+2025-05-15 14:53:03 [info]: 🚀 Setup pod launched:
+2025-05-15 14:53:03 [info]: ⏳ Waiting for setup pod setup-6824804f1f29cb1558a4d3be to complete...
+2025-05-15 14:53:03 [info]: 🔄 Pod setup-6824804f1f29cb1558a4d3be status: Pending
+2025-05-15 14:53:08 [info]: 🔄 Pod setup-6824804f1f29cb1558a4d3be status: Running
+2025-05-15 14:53:13 [info]: 🔄 Pod setup-6824804f1f29cb1558a4d3be status: Running
+2025-05-15 14:53:18 [info]: 🔄 Pod setup-6824804f1f29cb1558a4d3be status: Running
+2025-05-15 14:53:23 [info]: 🔄 Pod setup-6824804f1f29cb1558a4d3be status: Running
+2025-05-15 14:53:28 [info]: 🔄 Pod setup-6824804f1f29cb1558a4d3be status: Succeeded
+2025-05-15 14:53:28 [info]: ✅ Setup pod setup-6824804f1f29cb1558a4d3be completed successfully.
+2025-05-15 14:53:28 [info]: 🗑️ Setup pod setup-6824804f1f29cb1558a4d3be deleted
+2025-05-15 14:53:28 [info]: ⬆︎ Launching pods for 6824804f1f29cb1558a4d3be.flow0.sg0
+2025-05-15 14:53:28 [info]: 🚀 Launching pod 6824804f1f29cb1558a4d3be.flow0.sg0.w0
+2025-05-15 14:53:28 [info]: ⭐ Created pod worker-6824804f1f29cb1558a4d3be.flow0.sg0.w0
+2025-05-15 14:56:09 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 14:56:09 [info]: 🚀 Server running on port 5000
+2025-05-15 15:00:02 [info]: ⚙️ Environment variables:
+2025-05-15 15:00:02 [info]: 🗂️ Initialized task queue for
+2025-05-15 15:00:02 [info]: 🗂️ Initialized task queue for
+2025-05-15 15:00:02 [info]: 🚀 Execution E1 starting...
+2025-05-15 15:00:02 [info]: 🌲🌲🌲🌲🌲 The projectId is
+2025-05-15 15:00:02 [info]: 🚀 YAML Content
+2025-05-15 15:00:02 [info]: 🔍 Applying manifest for PersistentVolumeClaim...
+2025-05-15 15:00:02 [info]: ⚠️ PVC pvc-6824804f1f29cb1558a4d3be already exists, skipping creation.
+2025-05-15 15:00:02 [info]: 🚀 YAML Content
+2025-05-15 15:00:02 [info]: 🔍 Applying manifest for Pod...
+2025-05-15 15:00:02 [info]: 🚀 Setup pod launched:
+2025-05-15 15:00:02 [info]: ⏳ Waiting for setup pod setup-6824804f1f29cb1558a4d3be to complete...
+2025-05-15 15:00:02 [info]: 🔄 Pod setup-6824804f1f29cb1558a4d3be status: Pending
+2025-05-15 15:00:07 [info]: 🔄 Pod setup-6824804f1f29cb1558a4d3be status: Running
+2025-05-15 15:00:12 [info]: 🔄 Pod setup-6824804f1f29cb1558a4d3be status: Running
+2025-05-15 15:00:17 [info]: 🔄 Pod setup-6824804f1f29cb1558a4d3be status: Running
+2025-05-15 15:00:22 [info]: 🔄 Pod setup-6824804f1f29cb1558a4d3be status: Succeeded
+2025-05-15 15:00:22 [info]: ✅ Setup pod setup-6824804f1f29cb1558a4d3be completed successfully.
+2025-05-15 15:00:22 [info]: 🗑️ Setup pod setup-6824804f1f29cb1558a4d3be deleted
+2025-05-15 15:00:22 [info]: ⬆︎ Launching pods for 6824804f1f29cb1558a4d3be.flow0.sg0
+2025-05-15 15:00:22 [info]: 🚀 Launching pod 6824804f1f29cb1558a4d3be.flow0.sg0.w0
+2025-05-15 15:00:22 [info]: ⭐ Created pod worker-6824804f1f29cb1558a4d3be.flow0.sg0.w0
+2025-05-15 15:09:43 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 15:09:44 [info]: 🚀 Server running on port 5000
+2025-05-15 15:11:41 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 15:11:42 [info]: 🚀 Server running on port 5000
+2025-05-15 15:12:16 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 15:12:17 [info]: 🚀 Server running on port 5000
+2025-05-15 15:13:24 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 15:13:25 [info]: 🚀 Server running on port 5000
+2025-05-15 15:13:46 [info]: 🚀 HTTP Server running on port 5000
+2025-05-15 15:13:46 [info]: 🚀 Server running on port 5000
+🚀 HTTP Server running on port 5000
+🚀 Server running on port 5000
+🚀 HTTP Server running on port 5000
+🚀 Server running on port 5000
+⚙️ Environment variables:
+🗂️ Initialized task queue for
+🗂️ Initialized task queue for
+🚀 Execution E1 starting...
+🌲🌲🌲🌲🌲 The projectId is
+🚀 YAML Content
+🔍 Applying manifest for PersistentVolumeClaim...
+⚠️ PVC pvc-6824804f1f29cb1558a4d3be already exists, skipping creation.
+🚀 YAML Content
+🔍 Applying manifest for Pod...
+🚀 Setup pod launched:
+⏳ Waiting for setup pod setup-6824804f1f29cb1558a4d3be to complete...
+🔄 Pod setup-6824804f1f29cb1558a4d3be status: Pending
+🔄 Pod setup-6824804f1f29cb1558a4d3be status: Running
+🔄 Pod setup-6824804f1f29cb1558a4d3be status: Running
+🔄 Pod setup-6824804f1f29cb1558a4d3be status: Running
+🔄 Pod setup-6824804f1f29cb1558a4d3be status: Succeeded
+✅ Setup pod setup-6824804f1f29cb1558a4d3be completed successfully.
+🗑️ Setup pod setup-6824804f1f29cb1558a4d3be deleted
+⬆︎ Launching pods for 6824804f1f29cb1558a4d3be.flow0.sg0
+🚀 Launching pod 6824804f1f29cb1558a4d3be.flow0.sg0.w0
+⭐ Created pod worker-6824804f1f29cb1558a4d3be.flow0.sg0.w0
+🚀 HTTP Server running on port 5000
+🚀 Server running on port 5000
+⚙️ Environment variables:
+🗂️ Initialized task queue for
+🗂️ Initialized task queue for
+🚀 Execution E1 starting...
+🌲🌲🌲🌲🌲 The projectId is
+🚀 YAML Content
+🔍 Applying manifest for PersistentVolumeClaim...
+⚠️ PVC pvc-6824804f1f29cb1558a4d3be already exists, skipping creation.
+🚀 YAML Content
+🔍 Applying manifest for Pod...
+🚀 Setup pod launched:
+⏳ Waiting for setup pod setup-6824804f1f29cb1558a4d3be to complete...
+🔄 Pod setup-6824804f1f29cb1558a4d3be status: Pending
+🔄 Pod setup-6824804f1f29cb1558a4d3be status: Running
+🔄 Pod setup-6824804f1f29cb1558a4d3be status: Running
+🔄 Pod setup-6824804f1f29cb1558a4d3be status: Running
+🔄 Pod setup-6824804f1f29cb1558a4d3be status: Succeeded
+✅ Setup pod setup-6824804f1f29cb1558a4d3be completed successfully.
+🗑️ Setup pod setup-6824804f1f29cb1558a4d3be deleted
+⬆︎ Launching pods for 6824804f1f29cb1558a4d3be.flow0.sg0
+🚀 Launching pod 6824804f1f29cb1558a4d3be.flow0.sg0.w0
+❌ Failed to create pod:
+🚀 HTTP Server running on port 5000
+🚀 Server running on port 5000
+🚀 HTTP Server running on port 5000
+🚀 Server running on port 5000
+⚙️ Environment variables:
+🗂️ Initialized task queue for
+🗂️ Initialized task queue for
+🚀 Execution E1 starting...
+🌲🌲🌲🌲🌲 The projectId is
+🚀 YAML Content
+🔍 Applying manifest for PersistentVolumeClaim...
+⚠️ PVC pvc-6824804f1f29cb1558a4d3be already exists, skipping creation.
+⚠️ Skipping setup pod for setup-6824804f1f29cb1558a4d3be
+⬆︎ Launching pods for 6824804f1f29cb1558a4d3be.flow0.sg0
+🚀 Launching pod 6824804f1f29cb1558a4d3be.flow0.sg0.w0
+⭐ Created pod worker-6824804f1f29cb1558a4d3be.flow0.sg0.w0
+⚙️ Environment variables:
+🗂️ Initialized task queue for
+🗂️ Initialized task queue for
+🚀 Execution E1 starting...
+🌲🌲🌲🌲🌲 The projectId is
+🚀 YAML Content
+🔍 Applying manifest for PersistentVolumeClaim...
+⚠️ PVC pvc-6824804f1f29cb1558a4d3be already exists, skipping creation.
+⚠️ Skipping setup pod for setup-6824804f1f29cb1558a4d3be
+⬆︎ Launching pods for 6824804f1f29cb1558a4d3be.flow0.sg0
+🚀 Launching pod 6824804f1f29cb1558a4d3be.flow0.sg0.w0
+⭐ Created pod worker-6824804f1f29cb1558a4d3be.flow0.sg0.w0
+🚀 HTTP Server running on port 5000
+🚀 Server running on port 5000
+🚀 HTTP Server running on port 5000
+🚀 Server running on port 5000
+🚀 HTTP Server running on port 5000
+🚀 Server running on port 5000
+🚀 HTTP Server running on port 5000
+🚀 Server running on port 5000
+⚙️ Environment variables:
+🗂️ Initialized task queue for
+🗂️ Initialized task queue for
+🚀 Execution E1 starting...
+🌲🌲🌲🌲🌲 The projectId is
+🚀 YAML Content
+🔍 Applying manifest for PersistentVolumeClaim...
+⚠️ PVC pvc-6824804f1f29cb1558a4d3be already exists, skipping creation.
+⚠️ Skipping setup pod for setup-6824804f1f29cb1558a4d3be
+⬆︎ Launching pods for 6824804f1f29cb1558a4d3be.flow0.sg0
+🚀 Launching pod 6824804f1f29cb1558a4d3be.flow0.sg0.w0
+❌ Failed to create pod:
+🚀 HTTP Server running on port 5000
+🚀 Server running on port 5000
+⚙️ Environment variables:
+🗂️ Initialized task queue for
+🗂️ Initialized task queue for
+🚀 Execution E1 starting...
+🌲🌲🌲🌲🌲 The projectId is
+🚀 YAML Content
+🔍 Applying manifest for PersistentVolumeClaim...
+⚠️ PVC pvc-6824804f1f29cb1558a4d3be already exists, skipping creation.
+⚠️ Skipping setup pod for setup-6824804f1f29cb1558a4d3be
+⬆︎ Launching pods for 6824804f1f29cb1558a4d3be.flow0.sg0
+🚀 Launching pod 6824804f1f29cb1558a4d3be.flow0.sg0.w0
+⭐ Created pod worker-6824804f1f29cb1558a4d3be.flow0.sg0.w0
+🔌 Pod 6824804f1f29cb1558a4d3be.flow0.sg0.w0 connected for tasks in 6824804f1f29cb1558a4d3be.flow0.sg0
+👋 Received hello from pod:
+🔥 Recieved
+🔥 Recieved
+📭 No tasks left for 6824804f1f29cb1558a4d3be.flow0.sg0
+🚀 HTTP Server running on port 5000
+🚀 Server running on port 5000
+🚀 HTTP Server running on port 5000
+🚀 Server running on port 5000
+🚀 HTTP Server running on port 5000
+🚀 Server running on port 5000
+🚀 HTTP Server running on port 5000
+🚀 Server running on port 5000
+❌ Failed to create pod:
+❌ Failed to create pod:
+❌ Failed to create pod:
+❌ Failed to create pod:

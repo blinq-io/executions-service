@@ -7,6 +7,8 @@ export async function scheduleExecutionViaCronjob(environmentVariables: CronJobE
 
   const manifest = generateCronJobYaml(environmentVariables);
 
+  console.log(`📃📃📃📃 Scheduling CronJob with manifest:`, manifest);
+
   await k8s.applyManifestFromYaml(manifest);
   console.log(`🕒 Scheduled CronJob for execution`, JSON.stringify(environmentVariables, null, 2));
 }

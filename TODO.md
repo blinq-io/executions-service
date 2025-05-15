@@ -48,3 +48,9 @@ TODO: 14 May
 2. Work on the code, test everything
 3. Instead of yaml use helm charts
 4. 
+
+
+
+15 may
+1. implement shutdown
+2. Implement halting flow execution if sg fails

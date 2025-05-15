@@ -9,6 +9,12 @@ export interface CronJobEnvVariables {
   HEADLESS: boolean;
 }
 
+export interface TaskResult {
+  taskId: string;
+  exitCode: number | null;
+  task: Task;
+}
+
 export interface Scenario {
   featureIndex: number;
   scenarioIndex: number;
@@ -65,4 +71,5 @@ export default mongoose.model<Execution>('Execution', executionSchema);
 export interface Task {
   id: string;
   data: Scenario;
+  retriesRemaining: number;
 }

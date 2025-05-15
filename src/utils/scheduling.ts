@@ -17,6 +17,7 @@ metadata:
   name: exec-${EXECUTION_ID}
 spec:
   schedule: "${CRON_EXPRESSION}"
+  suspend: false
   jobTemplate:
     spec:
       template:
@@ -38,8 +39,12 @@ spec:
 
 export function generateDynamicCronExpression(): string {
   const currentDate = new Date();
-  let minutes = currentDate.getMinutes();
-  let hours = currentDate.getHours();
+
+  // Apply +5:30 offset (in milliseconds)
+  const istOffsetMs = (5 * 60 + 30) * 60 * 1000;
+  const istDate = new Date(currentDate.getTime() - istOffsetMs);
+  let minutes = istDate.getMinutes();
+  let hours = istDate.getHours();
 
   minutes += 1;
 

@@ -14,9 +14,9 @@ export const createExecution = async (req: Request, res: Response) => {
     const execution = new ExecutionModel(req.body);
     await execution.save();
 
-    // logger.info('🚀 Sending update via stream')
+    // console.log('🚀 Sending update via stream')
     // await updateStream();
-    // logger.info('🚀 Update sent via stream')
+    // console.log('🚀 Update sent via stream')
 
     res.status(201).json(execution);
   } catch (error) {
@@ -48,7 +48,7 @@ export const runExecution = async (req: Request, res: Response) => {
 
   const envVariables = req.body;
 
-  logger.info('⚙️ Environment variables:', envVariables);
+  console.log('⚙️ Environment variables:', envVariables);
 
   // set the process.env variables
   for (const [key, value] of Object.entries(envVariables)) {

@@ -18,7 +18,7 @@ app.use(express.json());
 app.use('/api/executions', executionRoutes);
 
 //? bind on all interfaces
-httpServer.listen(5000, '0.0.0.0', () => logger.info('🚀 HTTP Server running on port 5000'));
+httpServer.listen(5000, '0.0.0.0', () => console.log('🚀 HTTP Server running on port 5000'));
 export { io };
 
 export default app;

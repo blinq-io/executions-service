@@ -1,9 +1,5 @@
+import { MAX_ATTEMPTS_PER_TASK } from "../constants";
 import { Scenario, Task } from "../models/execution.model";
-
-// TODO
-export const getActiveGroupIndex = (flowIndex: number) => {
-    return 0;
-}
 
 export const getFlowGroupKey = (executionId: string, flowIndex: number, activeGroupIndex: number) => {
     return `${executionId}.flow${flowIndex}.sg${activeGroupIndex}`;
@@ -15,6 +11,7 @@ export const getTasksArray = (scenarios: Scenario[], flowIndex: number, groupInd
         return {
             id: taskId,
             data: scenario,
+            retriesRemaining: MAX_ATTEMPTS_PER_TASK - 1,
         }
     });
 }

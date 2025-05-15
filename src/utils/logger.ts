@@ -4,6 +4,7 @@ const { combine, timestamp, printf, errors } = format;
 
 // Custom format
 const logFormat = printf(({ level, message, timestamp, stack }) => {
+  return `${message}`;
   return `${timestamp} [${level}]: ${stack || message}`;
 });
 
