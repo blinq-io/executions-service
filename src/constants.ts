@@ -8,3 +8,6 @@ export const CONFIG_PATH = 'src/config_files';
 export const PVC_YAML_PATH = CONFIG_PATH + '/pvc.yaml';
 export const WORKER_YAML_PATH = CONFIG_PATH + '/workerPod.yaml';
 export const SETUP_YAML_PATH = CONFIG_PATH + '/setupEnv.yaml';
+
+export const TEST_CRON_EXPRESSION = '55 12 * * *';
+

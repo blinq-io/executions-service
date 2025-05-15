@@ -1,18 +1,20 @@
 // src/classes/KubernetesClient.ts
 import * as k8s from '@kubernetes/client-node';
 import * as fs from 'fs';
-import * as path from 'path';
 import * as yaml from 'js-yaml';
 import logger from '../utils/logger';
 
 export class KubernetesClient {
+  private kc: k8s.KubeConfig;
   private k8sApi: k8s.CoreV1Api;
+  private batchApi: k8s.BatchV1Api;
   private namespace = 'default';
 
   constructor() {
-    const kc = new k8s.KubeConfig();
-    kc.loadFromDefault();
-    this.k8sApi = kc.makeApiClient(k8s.CoreV1Api);
+    this.kc = new k8s.KubeConfig();
+    this.kc.loadFromDefault();
+    this.k8sApi = this.kc.makeApiClient(k8s.CoreV1Api);
+    this.batchApi = this.kc.makeApiClient(k8s.BatchV1Api);
   }
 
   async createPodFromYaml(yamlContent: string) {
@@ -22,10 +24,10 @@ export class KubernetesClient {
       throw new Error('❌ Invalid pod manifest.');
     }
 
-  try {
+    try {
       await this.k8sApi.createNamespacedPod({
-        namespace: 'default', //? The namespace of the pod
-        body: manifest        //? The manifest of the pod (k8s.V1Pod)
+        namespace: 'default',
+        body: manifest
       });
       logger.info(`⭐ Created pod ${manifest.metadata.name}`);
     } catch (err: any) {
@@ -43,13 +45,13 @@ export class KubernetesClient {
 
     logger.info('🚀 YAML Content', content);
 
-
-
     const obj = k8s.loadYaml(content) as k8s.V1PersistentVolumeClaim | k8s.V1Pod;
     if (!obj.kind) {
       throw new Error('Manifest is missing `kind` field.');
     }
+
     logger.info(`🔍 Applying manifest for ${obj.kind}...`);
+
     switch (obj.kind) {
       case 'PersistentVolumeClaim':
         try {
@@ -58,56 +60,69 @@ export class KubernetesClient {
             body: obj as k8s.V1PersistentVolumeClaim
           });
         } catch (err: any) {
-          let reason = '';
-          try {
-            const parsedBody = typeof err.body === 'string' ? JSON.parse(err.body) : err.body;
-            reason = parsedBody?.reason;
-          } catch (e) {
-            // swallow parse error
-          }
+          const reason = this.extractReason(err);
           if (reason === 'AlreadyExists') {
             logger.info(`⚠️ PVC ${obj.metadata?.name} already exists, skipping creation.`);
             return;
           }
           throw err;
         }
+
       case 'Pod':
         try {
           return await this.k8sApi.createNamespacedPod({
             namespace: this.namespace,
-            body: obj as k8s.V1Pod,
+            body: obj as k8s.V1Pod
           });
         } catch (err: any) {
-          let reason = '';
-          try {
-            const parsedBody = typeof err.body === 'string' ? JSON.parse(err.body) : err.body;
-            reason = parsedBody?.reason;
-          } catch (e) {
-            // swallow parse error
-          }
-    
+          const reason = this.extractReason(err);
           if (reason === 'AlreadyExists') {
             logger.info(`⚠️ Pod ${obj.metadata?.name} already exists, skipping creation.`);
             return;
           }
-    
           throw err;
         }
+
       default:
         throw new Error(`Unsupported kind: ${obj.kind}`);
     }
   }
 
+  public async applyManifestFromYaml(yamlString: string) {
+    const documents = yaml.loadAll(yamlString);
+
+    for (const doc of documents) {
+      if (!this.isKubernetesResource(doc)) continue;
+
+      const kind = doc.kind;
+      const metadata = doc.metadata || {};
+      const namespace = metadata.namespace || 'default';
+
+      switch (kind) {
+        case 'CronJob':
+          await this.batchApi.createNamespacedCronJob({
+            namespace,
+            body: doc as k8s.V1CronJob,
+          });
+          break;
+      
+        default:
+          throw new Error(`Unsupported kind in YAML: ${kind}`);
+      }
+      
+    }
+  }
+
   async deletePod(name: string) {
     await this.k8sApi.deleteNamespacedPod({
-      name: name,              // The name of the pod to delete
-      namespace: this.namespace // The namespace in which the pod exists
+      name,
+      namespace: this.namespace
     });
   }
 
   async deletePVC(name: string) {
     await this.k8sApi.deleteNamespacedPersistentVolumeClaim({
-      name: name,
+      name,
       namespace: this.namespace
     });
   }
@@ -133,10 +148,22 @@ export class KubernetesClient {
         throw new Error(`❌ Setup pod ${podName} failed.`);
       }
 
-      await new Promise(resolve => setTimeout(resolve, 5000)); // 3s delay
+      await new Promise(resolve => setTimeout(resolve, 5000));
     }
 
     throw new Error(`⏰ Timeout waiting for setup pod ${podName}`);
   }
 
+  private isKubernetesResource(doc: any): doc is { kind: string; metadata?: { namespace?: string } } {
+    return typeof doc === 'object' && doc !== null && typeof doc.kind === 'string';
+  }
+
+  private extractReason(err: any): string {
+    try {
+      const body = typeof err.body === 'string' ? JSON.parse(err.body) : err.body;
+      return body?.reason || '';
+    } catch {
+      return '';
+    }
+  }
 }

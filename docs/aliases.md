@@ -41,3 +41,9 @@ enter_pod() {
 }
 
 kubectl cp ./env2.sh worker-681f5cec9074438ede56819f.flow0.sg0.w0:/app/environment-setup.sh
+
+
+## Trigger cron job manually:
+kubectl create job --from=cronjob/exec-6824974c57dcbb2349d25366 manual-trigger-job
+
+kubectl create job --from=cronjob/exec-6824804f1f29cb1558a4d3be manual-trigger-job

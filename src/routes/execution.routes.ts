@@ -8,7 +8,8 @@ import {
     getFreeThreadCount,
     runExecution,
     updateExecution,
-    deleteFlow
+    deleteFlow,
+    scheduleExecution
 } from '../controllers/executionController';
 import { clearStreamHook, setStreamHook } from '../utils/sse';
 
@@ -37,10 +38,12 @@ const router = Router();
 router.get('/', getAllExecutions);
 router.post('/new', createExecution);
 router.post('/run/:id', runExecution);
+router.post('/schedule/:id', scheduleExecution);
 router.get('/free-thread-count', getFreeThreadCount);
 router.get('/:id', getExecutionById);
 router.put('/:id', updateExecution);
 router.delete('/:id', deleteExecution);
 router.delete('/:id/flows/:flowIndex', deleteFlow);
+
 
 export default router;

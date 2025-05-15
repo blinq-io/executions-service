@@ -37,3 +37,14 @@
 4. Performance concerns:
 5. [❗] - Discuss the data exhcange and the APIs with Guy
 6. [❗] - Discuss the scalability and extensibilty of the code - using Message Queues in place of sockets
+
+
+## For storing the results 
+- use Kafka for preserving results
+- not pvc, use s3
+
+TODO: 14 May
+1. Create a cluster, maintain it, ingress controller for the routes
+2. Work on the code, test everything
+3. Instead of yaml use helm charts
+4. 

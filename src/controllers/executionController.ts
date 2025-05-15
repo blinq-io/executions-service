@@ -1,10 +1,13 @@
 import { Request, Response } from 'express';
 import ExecutionModel from '../models/execution.model';
 import { ExecutionRunner } from '../classes/ExecutionRunner';
-import { THREAD_LIMIT } from '../constants';
+import { TEST_CRON_EXPRESSION, THREAD_LIMIT } from '../constants';
 import { io } from '../app';
 import { updateStream } from '../utils/sse';
 import logger from '../utils/logger';
+import mongoose from 'mongoose';
+import { scheduleExecutionViaCronjob } from '../schedulers/executionScheduler';
+import { generateDynamicCronExpression } from '../utils/scheduling';
 
 export const createExecution = async (req: Request, res: Response) => {
   try {
@@ -22,24 +25,36 @@ export const createExecution = async (req: Request, res: Response) => {
   }
 };
 
+export const scheduleExecution = async (req: Request, res: Response) => {
+  console.log('🚀 Scheduling execution:', req.params.id, '...');
+  const execution = await ExecutionModel.findById(req.params.id);
+  if (!execution) return res.status(404).json({ error: 'Execution not found' });
+
+  const envVariables = {
+    ...req.body.envVariables,
+    EXECUTION_ID:execution._id,
+    CRON_EXPRESSION: generateDynamicCronExpression(),
+  };
+  const schedule = req.body.schedule;
+  console.log('▼ Recieved schedule:', JSON.stringify({envVariables, schedule}, null, 2));
+
+  scheduleExecutionViaCronjob(envVariables);
+  res.json({ message: 'Execution scheduled' });
+}
 
 export const runExecution = async (req: Request, res: Response) => {
   const execution = await ExecutionModel.findById(req.params.id);
   if (!execution) return res.status(404).json({ error: 'Execution not found' });
 
-  const environmentVariables = req.body;
+  const envVariables = req.body;
 
-  logger.info('⚙️ Environment variables:', environmentVariables);
-  
+  logger.info('⚙️ Environment variables:', envVariables);
+
   // set the process.env variables
-  for (const [key, value] of Object.entries(environmentVariables)) {
+  for (const [key, value] of Object.entries(envVariables)) {
+    console.log(`🌲 Setting ${key} to ${value}`);
     process.env[key] = String(value);
   }
-
-  logger.info('✅ Environment variables set:', {
-    token: process.env.BLINQ_TOKEN, 
-    projectId: process.env.EXTRACT_DIR
-  });
 
   const runner = new ExecutionRunner(execution, io);
   runner.start(); // trigger K8s interaction etc
@@ -61,29 +76,25 @@ export const getAllExecutions = async (req: Request, res: Response) => {
   }
 };
 
-
 export const getFreeThreadCount = async (req: Request, res: Response) => {
   const { projectId } = req.query;
-
   const executions = await ExecutionModel.find({ projectId });
   const freeThreadCount = THREAD_LIMIT - executions.reduce((acc, execution) => {
     const threadCount = execution.flows.reduce((sum, flow) => sum + Math.max(...flow.scenarioGroups.map((sg) => sg.threadCount)), 0);
     return acc + (execution.isSingleThreaded ? 1 : threadCount);
   }, 0);
-  console.log('🔋 Free thread count:', freeThreadCount, JSON.stringify(executions, null, 2));
-  res.send({ freeThreadCount });
+  res.send(freeThreadCount);
 };
 
 export const getExecutionById = async (req: Request, res: Response) => {
   const execution = await ExecutionModel.findById(req.params.id);
   if (!execution) return res.status(404).json({ error: 'Execution not found' });
-  console.log('Execution found:', execution);
   res.json(execution);
 };
+
 export const updateExecution = async (req: Request, res: Response) => {
-  console.error('💎💎💎💎💎💎💎💎💎💎💎💎💎💎v', req.params.id);
-  if(req.params.id === undefined) {
-    return res.status(400).json({ error: 'Execution ID is required' });
+  if (!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ error: 'Valid Execution ID is required' });
   }
   const execution = await ExecutionModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
   if (!execution) return res.status(404).json({ error: 'Execution not found' });

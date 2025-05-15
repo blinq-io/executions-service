@@ -15,7 +15,7 @@ cors: {
 
 app.use(cors());
 app.use(express.json());
-app.use('/executions', executionRoutes);
+app.use('/api/executions', executionRoutes);
 
 //? bind on all interfaces
 httpServer.listen(5000, '0.0.0.0', () => logger.info('🚀 HTTP Server running on port 5000'));

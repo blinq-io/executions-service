@@ -1,5 +1,14 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
+export interface CronJobEnvVariables {
+  EXECUTION_ID: string;
+  CRON_EXPRESSION: string;
+  EXTRACT_DIR: string;
+  BLINQ_TOKEN: string;
+  NODE_ENV_BLINQ: string;
+  HEADLESS: boolean;
+}
+
 export interface Scenario {
   featureIndex: number;
   scenarioIndex: number;

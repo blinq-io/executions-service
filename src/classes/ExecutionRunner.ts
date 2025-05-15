@@ -78,6 +78,7 @@ export class ExecutionRunner {
       const group = flow.scenarioGroups[activeGroupIndex]; 
       const flowGroupKey = getFlowGroupKey(this.execution._id, flowIndex, activeGroupIndex);
       logger.info(`⬆︎ Launching pods for ${flowGroupKey}`);
+      if(group.threadCount < 1) console.log(`⚠️ No threads for ${flowGroupKey}`);
       for (let i = 0; i < group.threadCount; i++) {
         const podId = `${flowGroupKey}.w${i}`;
         const podSpec = generateWorkerYaml({

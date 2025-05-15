@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: exec-schedule-{{EXECUTION_ID}}
+spec:
+  schedule: "{{CRON_EXPRESSION}}"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: exec-trigger
+            image: curlimages/curl
+            command: [ "curl", "-X", "POST", "http://host.minikube.internal:5000/api/executions/run" ]
+            env:
+            - name: EXECUTION_ID
+              value: "{{EXECUTION_ID}}"
+          restartPolicy: OnFailure
