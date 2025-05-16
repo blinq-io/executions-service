@@ -9,7 +9,8 @@ import {
     runExecution,
     updateExecution,
     deleteFlow,
-    scheduleExecution
+    scheduleExecution,
+    descheduleExecution
 } from '../controllers/executionController';
 import { clearStreamHook, setStreamHook } from '../utils/sse';
 
@@ -39,6 +40,7 @@ router.get('/', getAllExecutions);
 router.post('/new', createExecution);
 router.post('/run/:id', runExecution);
 router.post('/schedule/:id', scheduleExecution);
+router.post('/deschedule/:id', descheduleExecution);
 router.get('/free-thread-count', getFreeThreadCount);
 router.get('/:id', getExecutionById);
 router.put('/:id', updateExecution);

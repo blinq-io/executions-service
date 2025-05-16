@@ -98,10 +98,19 @@ export class KubernetesClient {
 
       switch (kind) {
         case 'CronJob':
-          await this.batchApi.createNamespacedCronJob({
-            namespace,
-            body: doc as k8s.V1CronJob,
-          });
+          try {
+            await this.batchApi.createNamespacedCronJob({
+              namespace,
+              body: doc as k8s.V1CronJob,
+            });
+          } catch (err: any) {
+            const reason = this.extractReason(err);
+            if (reason === 'AlreadyExists') {
+              console.log(`⚠️ PVC Cronjob already exists, skipping creation.`);
+              return;
+            }
+            throw err;
+          }
           break;
       
         default:
