@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import ExecutionModel from '../models/execution.model';
+import ExecutionModel, { Schedule } from '../models/execution.model';
 import { ExecutionRunner } from '../classes/ExecutionRunner';
 import { TEST_CRON_EXPRESSION, THREAD_LIMIT } from '../constants';
 import { io } from '../app';
@@ -33,14 +33,14 @@ export const scheduleExecution = async (req: Request, res: Response) => {
   console.log('🚀 Scheduling execution:', req.params.id, '...');
   const execution = await ExecutionModel.findById(req.params.id);
   if (!execution) return res.status(404).json({ error: 'Execution not found' });
-
+  
+  const schedule: Schedule = req.body.schedule;
   const envVariables = {
     ...req.body.envVariables,
     EXECUTION_ID:execution._id,
-    CRON_EXPRESSION: generateDynamicCronExpression(),
+    CRON_EXPRESSION: generateDynamicCronExpression(schedule),
   };
-  const schedule = req.body.schedule;
-  console.log('▼ Recieved schedule:', JSON.stringify({envVariables, schedule}, null, 2));
+  console.log('▼ Recieved schedule:', JSON.stringify({ schedule: generateDynamicCronExpression(schedule) }, null, 2));
 
   execution.enabled = true;
   execution.save();

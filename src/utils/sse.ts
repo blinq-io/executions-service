@@ -30,7 +30,7 @@ export async function updateStream() {
       return;
     }
     const executions = await executionModel.find({projectId: process.env.projectId});
-    console.log('🚀 Sending update via stream', JSON.stringify(executions, null, 2));
+    console.log('🚀 Sending update via stream');
 
     stream_hooks.forEach((hook) => {
       if (hook.writableEnded || hook.headersSent === false) {

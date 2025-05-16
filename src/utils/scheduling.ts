@@ -1,4 +1,4 @@
-import { CronJobEnvVariables } from "../models/execution.model";
+import { CronJobEnvVariables, Schedule } from "../models/execution.model";
 
 export function generateCronJobYaml(envVariables: CronJobEnvVariables): string {
   const {
@@ -37,25 +37,23 @@ spec:
 }
 
 
-export function generateDynamicCronExpression(): string {
-  const currentDate = new Date();
+export function generateDynamicCronExpression(schedule: Schedule): string {
+  const [h, m] = schedule.time.split(':').map(Number);
+  const t =  new Date(Date.UTC(2025, 4, 16, h, m, 0));
+  const positiveOffset = schedule.timeZone > 0;
+  const offsetH = Math.floor(Math.abs(schedule.timeZone));
+  const offsetM = Math.round((Math.abs(schedule.timeZone) - offsetH) * 60);
 
-  // Apply +5:30 offset (in milliseconds)
-  const istOffsetMs = (5 * 60 + 30) * 60 * 1000;
-  const istDate = new Date(currentDate.getTime() - istOffsetMs);
-  let minutes = istDate.getMinutes();
-  let hours = istDate.getHours();
-
-  minutes += 1;
-
-  if (minutes === 60) {
-    minutes = 0;
-    hours += 1;
+  if(!positiveOffset) {
+    t.setUTCHours(t.getUTCHours() + offsetH);
+    t.setUTCMinutes(t.getUTCMinutes() + offsetM);
+  } else {
+    t.setUTCHours(t.getUTCHours() - offsetH);
+    t.setUTCMinutes(t.getUTCMinutes() - offsetM);
   }
 
-  if (hours === 24) {
-    hours = 0;
-  }
+  let minutes = t.getUTCMinutes();
+  let hours = t.getUTCHours();
 
   const formattedMinutes = minutes.toString().padStart(2, '0');
   const formattedHours = hours.toString().padStart(2, '0');
