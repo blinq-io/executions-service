@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { updateStream } from '../utils/sse';
 
 export interface CronJobEnvVariables {
   EXECUTION_ID: string;
@@ -53,18 +54,29 @@ export interface Execution extends Document {
   enabled: boolean;
   userId: string;
   projectId: string;
+  running: boolean;
 }
 
 const executionSchema = new Schema<Execution>({
   name: String,
   env: String,
+  branch: String,
   flows: Array,
   schedule: Object,
   isSingleThreaded: Boolean,
   enabled: Boolean,
   userId: String,
   projectId: String,
+  running: Boolean,
 });
+
+function streamUpdate (doc: Execution) {
+  updateStream();
+}
+
+executionSchema.post('save', streamUpdate);
+executionSchema.post('findOneAndUpdate', streamUpdate);
+executionSchema.post('findOneAndDelete', streamUpdate);
 
 export default mongoose.model<Execution>('Execution', executionSchema);
 

@@ -5,27 +5,41 @@
 import { Response } from 'express';
 import executionModel from '../models/execution.model';
 
-let stream_hook: Response | undefined;
+let stream_hooks: Response[] = [];
 
 export function setStreamHook(res: Response) {
-  stream_hook = res;
+  // Add the new connection to the array
+  stream_hooks.push(res);
 }
 
-export function clearStreamHook() {
-  stream_hook = undefined;
+export function clearStreamHook(res: Response) {
+  // Remove the closed connection from the array
+  stream_hooks = stream_hooks.filter((hook) => hook !== res);
 }
+
 
 
 export async function updateStream() {
-  if (!stream_hook || stream_hook.writableEnded || stream_hook.headersSent === false) {
-    console.warn('⚠️ No active SSE stream to write to');
+  if (stream_hooks.length === 0) {
+    console.warn('⚠️ No active SSE clients to send updates to');
     return;
   }
-
   try {
-    const executions = await executionModel.find();
-    console.log('🚀 Sending update via stream');
-    stream_hook.write(`data: ${JSON.stringify(executions)}\n\n`);
+    if(process.env.projectId === undefined) {
+      console.error('❌ projectId is undefined, cannot update stream');
+      return;
+    }
+    const executions = await executionModel.find({projectId: process.env.projectId});
+    console.log('🚀 Sending update via stream', JSON.stringify(executions, null, 2));
+
+    stream_hooks.forEach((hook) => {
+      if (hook.writableEnded || hook.headersSent === false) {
+        console.warn('⚠️ Skipping client, connection is closed or invalid');
+      } else {
+        hook.write(`data: ${JSON.stringify(executions)}\n\n`);
+      }
+    });
+
     console.log('✅ Update sent via stream');
   } catch (err) {
     console.error('❌ Failed to fetch executions for SSE:', err);

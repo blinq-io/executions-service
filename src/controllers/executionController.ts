@@ -12,6 +12,7 @@ import { generateDynamicCronExpression } from '../utils/scheduling';
 export const createExecution = async (req: Request, res: Response) => {
   try {
     const execution = new ExecutionModel(req.body);
+    execution.running=false;
     await execution.save();
 
     // console.log('🚀 Sending update via stream')
@@ -56,6 +57,9 @@ export const runExecution = async (req: Request, res: Response) => {
     process.env[key] = String(value);
   }
 
+  execution.running=true;
+  execution.save();
+
   const runner = new ExecutionRunner(execution, io);
   runner.start(); // trigger K8s interaction etc
   res.json({ message: 'Execution started' });
@@ -64,6 +68,7 @@ export const runExecution = async (req: Request, res: Response) => {
 export const getAllExecutions = async (req: Request, res: Response) => {
   try {
     const { projectId } = req.query;
+    process.env.projectId = String(projectId);
 
     if (!projectId || typeof projectId !== 'string') {
       return res.status(400).json({ error: 'Missing or invalid projectId' });

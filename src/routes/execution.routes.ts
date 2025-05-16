@@ -15,25 +15,25 @@ import { clearStreamHook, setStreamHook } from '../utils/sse';
 
 const router = Router();
 
-//? SSE attempt, not working yet, TODO later
-// router.get('/stream', (req, res) => {
-//     res.setHeader('Content-Type', 'text/event-stream');
-//     res.setHeader('Cache-Control', 'no-cache');
-//     res.setHeader('Connection', 'keep-alive');
-//     res.flushHeaders();
+// ? SSE attempt, not working yet, TODO later
+router.get('/stream', (req, res) => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.flushHeaders();
 
-//     setStreamHook(res);
+    setStreamHook(res);
 
-//     const keepAlive = setInterval(() => {
-//         res.write(': keep-alive\n\n');
-//     }, 1000);
+    const keepAlive = setInterval(() => {
+        res.write(': keep-alive\n\n');
+    }, 1000);
 
-//     req.on('close', () => {
-//         clearInterval(keepAlive);
-//         clearStreamHook();
-//         console.log('🔌 SSE client disconnected');
-//     });
-// });
+    req.on('close', () => {
+        clearInterval(keepAlive);
+        clearStreamHook(res);
+        console.log('🔌 SSE client disconnected');
+    });
+});
 
 router.get('/', getAllExecutions);
 router.post('/new', createExecution);
