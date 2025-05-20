@@ -69,11 +69,21 @@ socket.on('connect', () => {
   }, 1000); // Give the event loop some time
 });
 
-socket.on('shutdown', () => {
+socket.on('shutdown', async () => {
   console.log(`🛑 Shutdown signal received. Disconnecting...`);
-  socket.disconnect();
+  try {
+    await new Promise((resolve) => socket.once('disconnect', resolve));
+    console.log(`✅ Disconnected cleanly`);
+  } catch (err) {
+    console.error(`❌ Error during disconnect`, err);
+  }
   process.exit(0);
-})
+});
+
+process.on('exit', (code) => {
+  console.log(`👋 Process exited with code: ${code}`);
+});
+
 
 //? for testing
 socket.on('hello', (msg) => {

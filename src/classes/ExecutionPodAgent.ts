@@ -1,7 +1,7 @@
 // src/classes/ExecutionPodAgent.ts
 export class ExecutionPodAgent {
     public id: string;
-    private socket: any;
+    public socket: any;
   
     constructor(id: string, socket: any) {
       this.id = id;

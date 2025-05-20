@@ -10,6 +10,7 @@ import { scheduleExecutionViaCronjob } from '../schedulers/executionScheduler';
 import { generateDynamicCronExpression } from '../utils/scheduling';
 import { exec } from 'child_process';
 import util from 'util';
+import { executionRunnerRegistry } from '../classes/ExecutionRunnerRegistry';
 
 const execAsync = util.promisify(exec);
 export const createExecution = async (req: Request, res: Response) => {
@@ -71,6 +72,23 @@ export const descheduleExecution = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Failed to deschedule execution', details: error.message });
   }
 };
+
+export const haltExecution = async (req: Request, res: Response) => {
+  const execution = await ExecutionModel.findById(req.params.id);
+  if (!execution) return res.status(404).json({ error: 'Execution not found' });
+
+  execution.running=false;
+  execution.save();
+
+  const runner = executionRunnerRegistry.get(execution._id.toString());
+  if (!runner) {
+    return res.status(400).json({ error: 'Execution is not currently running or already halted' });
+  }
+
+  await runner.stop();
+  res.json({ message: 'Execution halted successfully' });
+}
+
 export const runExecution = async (req: Request, res: Response) => {
   const execution = await ExecutionModel.findById(req.params.id);
   if (!execution) return res.status(404).json({ error: 'Execution not found' });

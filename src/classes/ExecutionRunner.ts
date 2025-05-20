@@ -8,6 +8,7 @@ import { BACKEND_SOCKET_URL, FINISHED_FLOW_SIGNAL, FINISHED_SG_SIGNAL, PVC_YAML_
 import { generateWorkerYaml } from '../config_files/generateWorkerYaml';
 import { getFlowGroupKey, getTasksArray } from '../utils/execData';
 import logger from '../utils/logger';
+import { executionRunnerRegistry } from './ExecutionRunnerRegistry';
 
 export class ExecutionRunner {
   private io: SocketIOServer;
@@ -15,11 +16,36 @@ export class ExecutionRunner {
   private connectedAgents: Map<string, ExecutionPodAgent[]> = new Map();
   private flowQueues: Map<number, Task[][]> = new Map();
   private flowStatus: Map<number, boolean> = new Map();
+  private abortExecutionController: AbortController | null = null;
 
   constructor(execution: Execution, io: SocketIOServer) {
     this.execution = execution;
     this.io = io;
     this.initializeQueues();
+  }
+
+  private simulateMockExecution = async () => {
+    const id = setInterval(() => console.log('🧪 Mock execution running...'), 1000);
+    await new Promise((res) => setTimeout(res, 500000));
+    clearInterval(id);
+    console.log('🧪 Mock execution finished')
+
+    this.execution.running = false;
+    this.execution.save();
+  }
+
+  private executionCleanup = () => {
+    this.execution.flows.forEach((flow, flowIndex) => {
+      const flowQueue = this.flowQueues.get(flowIndex);
+      if (flowQueue && flowQueue.length > 0) {
+        return;
+      }
+    });
+
+    console.log(`🗑️ All flows finished for execution ${this.execution._id}`);
+
+    this.execution.running = false;
+    this.execution.save();
   }
 
   private getActiveGroupIndex = (flowIndex: number): number => {
@@ -74,10 +100,68 @@ export class ExecutionRunner {
     });
   }
 
-  public async start() {
-    console.log(`🚀 Execution ${this.execution.name} starting...`);
-    await this.spawnPods();
-    this.setupSocketServer();
+  public async stop() {
+    console.log(`🛑 Stopping execution ${this.execution._id}`);
+
+    this.execution.running = false;
+    await this.execution.save();
+
+    this.abortExecutionController?.abort();
+    this.abortExecutionController = null;
+    for (const [groupKey, agents] of this.connectedAgents.entries()) {
+      console.log(`🗑️ Shutting down pods for group ${groupKey}`);
+      agents.forEach(agent => {
+        console.log(`⚠️ Sending shutdown to pod ${agent.id}`);
+        agent.socket.emit('shutdown');
+      });
+    }
+
+    const k8sClient = new KubernetesClient();
+    try {
+      await k8sClient.deletePod(`setup-${this.execution._id}`);
+      console.log(`🗑️ Setup pod deleted`);
+    } catch (err: any) {
+      console.warn(`⚠️ Failed to delete setup pod`, err.message);
+    }
+    for (const [groupKey, agents] of this.connectedAgents.entries()) {
+      for (const agent of agents) {
+        try {
+          await k8sClient.deletePod(agent.id);
+          console.log(`🗑️ Pod ${agent.id} deleted`);
+        } catch (err: any) {
+          console.warn(`⚠️ Failed to delete pod ${agent.id}:`, err.message);
+        }
+      }
+    }
+
+    const { executionRunnerRegistry } = await import('./ExecutionRunnerRegistry');
+    executionRunnerRegistry.remove(this.execution._id.toString());
+  }
+
+  public async start(mock = false) {
+    try {
+      await new Promise(async (resolve, reject) => {
+        this.abortExecutionController = new AbortController();
+        this.abortExecutionController.signal.addEventListener('abort', () => {
+          reject(new Error('Execution aborted'));
+        })
+  
+        console.log(`🚀 Execution ${this.execution.name} starting...`);
+        executionRunnerRegistry.set(this.execution._id.toString(), this);
+        if (mock) {
+          this.simulateMockExecution()
+          return;
+        }
+        await this.spawnPods();
+        this.setupSocketServer();
+        resolve('Execution started');
+      })
+    } catch (error) {
+      console.error('❌ Execution failed:', error);
+      this.execution.running = false;
+      await this.execution.save();
+      return;
+    }
   }
   // ✅ Works
   private async spawnPods() {
@@ -89,26 +173,30 @@ export class ExecutionRunner {
     const EXECUTION_ID = this.execution._id;
     const NODE_ENV_BLINQ = process.env.NODE_ENV_BLINQ || 'dev';
 
-    await k8sClient.applyManifestFromFile(PVC_YAML_PATH, {
-      EXECUTION_ID,
-    });
-
-    let SKIP_SETUP = false; //!
-    if (!SKIP_SETUP) {
-      await k8sClient.applyManifestFromFile(SETUP_YAML_PATH, {
+    try {
+      await k8sClient.applyManifestFromFile(PVC_YAML_PATH, {
         EXECUTION_ID,
-        EXTRACT_DIR,
-        BLINQ_TOKEN,
-        BUILD_ID: String(new Date().getTime()),
-        NODE_ENV_BLINQ,
       });
-
-      console.log(`⏳ Waiting for setup pod ${setupPodName} to complete...`);
-      await k8sClient.waitForPodCompletion(setupPodName);
-      await k8sClient.deletePod(setupPodName);
-      console.log(`🗑️ Setup pod ${setupPodName} deleted`);
-    } else {
-      console.log(`⚠️ Skipping setup pod for ${setupPodName}`);
+  
+      let SKIP_SETUP = false; //!
+      if (!SKIP_SETUP) {
+        await k8sClient.applyManifestFromFile(SETUP_YAML_PATH, {
+          EXECUTION_ID,
+          EXTRACT_DIR,
+          BLINQ_TOKEN,
+          BUILD_ID: String(new Date().getTime()),
+          NODE_ENV_BLINQ,
+        });
+  
+        console.log(`⏳ Waiting for setup pod ${setupPodName} to complete...`);
+        await k8sClient.waitForPodCompletion(setupPodName);
+        await k8sClient.deletePod(setupPodName);
+        console.log(`🗑️ Setup pod ${setupPodName} deleted`);
+      } else {
+        console.log(`⚠️ Skipping setup pod for ${setupPodName}`);
+      }
+    } catch (error) {
+      console.error('❌ Failed to spawn pods:', error);
     }
 
     for (let flowIndex = 0; flowIndex < this.execution.flows.length; flowIndex++) {
@@ -147,6 +235,7 @@ export class ExecutionRunner {
       const agent = new ExecutionPodAgent(podId, socket);
       const currPodsForThisGroup = this.connectedAgents.get(flowGroupKey) || [];
       this.connectedAgents.set(flowGroupKey, [...currPodsForThisGroup, agent]);
+      console.log('👥 Connected pods for this group:', this.connectedAgents.get(flowGroupKey));
 
       socket.on('ready', (e: any) => {
         const flowQueue = this.flowQueues.get(flowIndex);
@@ -154,6 +243,9 @@ export class ExecutionRunner {
         if (!flowQueue || flowQueue.length === 0) {
           console.log(`📭 No tasks left for Flow ${flowIndex + 1}`);
           socket.emit('shutdown');
+
+          this.executionCleanup();
+
           return;
         }
 
@@ -164,7 +256,7 @@ export class ExecutionRunner {
 
           const remainingPodsForThisGroup = (this.connectedAgents.get(flowGroupKey) || []).filter((a) => a.id !== podId);
           this.connectedAgents.set(flowGroupKey, remainingPodsForThisGroup);
-          if (remainingPodsForThisGroup.length === 0 && this.flowStatus.get(flowIndex)) {
+          if (remainingPodsForThisGroup.length === 0 && this.flowStatus.get(flowIndex) && this.execution.running) {
             console.log(`🪦 Last Pod is trying to spawn the pods for the next group`);
             this.launchPodsForActiveGroup(flowIndex);
           }
@@ -182,7 +274,6 @@ export class ExecutionRunner {
           console.log(`✅ Pod ${podId} completed task ${result.taskId}`);
         } else {
           console.error(`❌ Pod ${podId} failed task ${result.taskId}`);
-          console.log('🩸', JSON.stringify(result, null, 2))
           const flowIndex = Number(result.taskId.split('-')[1].split('flow')[1]);
           if (result.task.retriesRemaining > 0) {
             result.task.retriesRemaining--;
