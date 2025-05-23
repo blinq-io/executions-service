@@ -6,7 +6,7 @@ import { KubernetesClient } from './KubernetesClient';
 
 import { BACKEND_SOCKET_URL, FINISHED_FLOW_SIGNAL, FINISHED_SG_SIGNAL, PVC_YAML_PATH, SETUP_YAML_PATH } from '../constants';
 import { generateWorkerYaml } from '../config_files/generateWorkerYaml';
-import { getFlowGroupKey, getTasksArray } from '../utils/execData';
+import { getFlowGroupKey, getTasksArray, parsePodId } from '../utils/execData';
 import logger from '../utils/logger';
 import { executionRunnerRegistry } from './ExecutionRunnerRegistry';
 
@@ -34,15 +34,16 @@ export class ExecutionRunner {
     this.execution.save();
   }
 
+  //TODO
   private executionCleanup = () => {
-    this.execution.flows.forEach((flow, flowIndex) => {
-      const flowQueue = this.flowQueues.get(flowIndex);
-      if (flowQueue && flowQueue.length > 0) {
-        return;
-      }
-    });
+    // this.execution.flows.forEach((flow, flowIndex) => {
+    //   const flowQueue = this.flowQueues.get(flowIndex);
+    //   if (flowQueue && flowQueue.length > 0) {
+    //     return;
+    //   }
+    // });
 
-    console.log(`🗑️ All flows finished for execution ${this.execution._id}`);
+    // console.log(`🗑️ All flows finished for execution ${this.execution._id}`);
 
     this.execution.running = false;
     this.execution.save();
@@ -55,11 +56,11 @@ export class ExecutionRunner {
     }
     const sgTasks = flowQueue![0];
     const id = sgTasks[0].id;
-    // let taskId = `task-flow${flowIndex}-sg${groupIndex}-f${scenario.featureIndex}-s${scenario.scenarioIndex}`
-    return Number(id.split('-')[2].split('sg')[1]);
+    //? taskId structure is `task-flow${flowIndex}-sg${groupIndex}-f${scenario.featureIndex}-s${scenario.scenarioIndex}`
+    return Number(id.split('-')[2].split('sg')[1]); //? extract group index from taskId
   }
 
-  private launchPodsForActiveGroup = (flowIndex: number) => {
+  private launchPodsForActiveGroup = async (flowIndex: number) => {
     const EXTRACT_DIR = this.execution.projectId;
     const BLINQ_TOKEN = process.env.BLINQ_TOKEN!;
     const k8sClient = new KubernetesClient();
@@ -70,21 +71,20 @@ export class ExecutionRunner {
       return FINISHED_FLOW_SIGNAL;
     }
 
-    const availableThreads = this.execution.flows[flowIndex].scenarioGroups[activeGroupIndex].threadCount;
+    const allocatedThreads = this.execution.flows[flowIndex].scenarioGroups[activeGroupIndex].threadCount;
     const flowGroupKey = getFlowGroupKey(this.execution._id, flowIndex, activeGroupIndex);
     const EXECUTION_ID = this.execution._id;
-    for (let i = 0; i < availableThreads; i++) {
-      const podId = `${flowGroupKey}.w${i}`;
+    for (let i = 0; i < allocatedThreads; i++) {
+      const POD_ID = `${flowGroupKey}.w${i}`;
       const podSpec = generateWorkerYaml({
         EXECUTION_ID,
         EXTRACT_DIR,
-        POD_ID: podId,
-        FLOW_GROUP_KEY: flowGroupKey,
+        POD_ID,
         BLINQ_TOKEN,
         SOCKET_URL: BACKEND_SOCKET_URL,
       });
-      console.log(`🚀 Launching pod ${podId}`);
-      k8sClient.createPodFromYaml(podSpec);
+      console.log(`🚀 Launching pod ${POD_ID}`);
+      await k8sClient.createPodFromYaml(podSpec);
     }
     return flowIndex;
   }
@@ -145,7 +145,7 @@ export class ExecutionRunner {
         this.abortExecutionController.signal.addEventListener('abort', () => {
           reject(new Error('Execution aborted'));
         })
-  
+
         console.log(`🚀 Execution ${this.execution.name} starting...`);
         executionRunnerRegistry.set(this.execution._id.toString(), this);
         if (mock) {
@@ -153,7 +153,6 @@ export class ExecutionRunner {
           return;
         }
         await this.spawnPods();
-        this.setupSocketServer();
         resolve('Execution started');
       })
     } catch (error) {
@@ -177,7 +176,7 @@ export class ExecutionRunner {
       await k8sClient.applyManifestFromFile(PVC_YAML_PATH, {
         EXECUTION_ID,
       });
-  
+
       let SKIP_SETUP = false; //!
       if (!SKIP_SETUP) {
         await k8sClient.applyManifestFromFile(SETUP_YAML_PATH, {
@@ -187,7 +186,7 @@ export class ExecutionRunner {
           BUILD_ID: String(new Date().getTime()),
           NODE_ENV_BLINQ,
         });
-  
+
         console.log(`⏳ Waiting for setup pod ${setupPodName} to complete...`);
         await k8sClient.waitForPodCompletion(setupPodName);
         await k8sClient.deletePod(setupPodName);
@@ -206,99 +205,85 @@ export class ExecutionRunner {
     }
   }
 
-  public setupSocketServer() {
-    this.io.on('connection', (socket: Socket) => {
-      socket.emit("hello", "world");
-      socket.on('hello', (msg) => {
-        console.log('👋 Received hello from pod:', msg);
-      })
+  public handlePodConnection(socket: Socket, parsed: ReturnType<typeof parsePodId>) {
+    const { flowIndex, groupIndex, executionId, workerNumber } = parsed;
+    const podId = socket.handshake.query.podId as string;
+    const flowGroupKey = getFlowGroupKey(this.execution._id, flowIndex, groupIndex);
 
-      const podId = socket.handshake.query.podId as string;
-      const flowGroupKey = socket.handshake.query.flowGroupKey as string;
-      const executionId = socket.handshake.query.executionId as string;
-      const flowIndex = Number(flowGroupKey.split('.')[1].split('flow')[1]);
-      const groupIndex = flowGroupKey.split('.')[2].split('sg')[1];
+    console.log(`🔌 Pod ${podId} connected for tasks in ${this.execution.name} (Flow ${flowIndex + 1}, SG ${groupIndex + 1})`);
+    const agent = new ExecutionPodAgent(podId, socket);
+    const currPodsForThisGroup = this.connectedAgents.get(flowGroupKey) || [];
+    this.connectedAgents.set(flowGroupKey, [...currPodsForThisGroup, agent]);
+    console.log('👥 Updated connected pods for this group:', this.connectedAgents.get(flowGroupKey)?.map((pod) => pod.id));
 
-      if (executionId !== this.execution._id.toString()) {
-        console.warn(`❌ Pod ${podId} connected to wrong execution ${executionId}`);
-        socket.disconnect();
+    socket.on('ready', async (e: any) => {
+      const flowQueue = this.flowQueues.get(flowIndex);
+
+      if (!flowQueue || flowQueue.length === 0) {
+        console.log(`📭 No tasks left for Flow ${flowIndex + 1}`);
+        socket.emit('shutdown');
         return;
       }
 
-      if (!podId || !flowGroupKey) {
-        console.warn(`❌ Pod connected without required identifiers`);
-        socket.disconnect();
+      if(!this.flowStatus.get(flowIndex)) {
+        console.log(`📭 Flow ${flowIndex + 1} is no longer allowed to run because of a failed group, preventing further groups' execution`);
+        socket.emit('shutdown');
         return;
       }
 
-      console.log(`🔌 Pod ${podId} connected for tasks in ${flowGroupKey}`);
-      const agent = new ExecutionPodAgent(podId, socket);
-      const currPodsForThisGroup = this.connectedAgents.get(flowGroupKey) || [];
-      this.connectedAgents.set(flowGroupKey, [...currPodsForThisGroup, agent]);
-      console.log('👥 Connected pods for this group:', this.connectedAgents.get(flowGroupKey));
+      const sgTasks = flowQueue[0];
+      //? if the group is finished, we can move to the next group by cleaning up the current group and initiating the next group
+      if (sgTasks.length === 0) {
+        console.log(`📭 No tasks left for Group ${groupIndex} of Flow ${flowIndex + 1}.`);
 
-      socket.on('ready', (e: any) => {
-        const flowQueue = this.flowQueues.get(flowIndex);
-
-        if (!flowQueue || flowQueue.length === 0) {
-          console.log(`📭 No tasks left for Flow ${flowIndex + 1}`);
-          socket.emit('shutdown');
-
-          this.executionCleanup();
-
-          return;
-        }
-
-        const sgTasks = flowQueue[0];
-        if (sgTasks.length === 0) {
-          console.log(`📭 No tasks left for Flow ${flowIndex + 1} SG ${groupIndex}`);
+        const remainingPodsForThisGroup = (this.connectedAgents.get(flowGroupKey) || []).filter((a) => a.id !== podId);
+        this.connectedAgents.set(flowGroupKey, remainingPodsForThisGroup);
+        //? If this is the last pod in the group & the flow is still allowed to run & the execution is running
+        //? then we can move to the next group
+        if (remainingPodsForThisGroup.length === 0 && this.flowStatus.get(flowIndex) && this.execution.running) {
           flowQueue.shift();
+          console.log(`🪦 Last Pod is trying to spawn the pods for the next group`);
+          await this.launchPodsForActiveGroup(flowIndex);
+        }
+        socket.emit('shutdown');
+        return;
+      } else {
+        const task = sgTasks.shift();
+        agent.assignTask(task!);
+      }
+    });
 
-          const remainingPodsForThisGroup = (this.connectedAgents.get(flowGroupKey) || []).filter((a) => a.id !== podId);
-          this.connectedAgents.set(flowGroupKey, remainingPodsForThisGroup);
-          if (remainingPodsForThisGroup.length === 0 && this.flowStatus.get(flowIndex) && this.execution.running) {
-            console.log(`🪦 Last Pod is trying to spawn the pods for the next group`);
-            this.launchPodsForActiveGroup(flowIndex);
+    socket.on('task-complete', (result: TaskResult) => {
+      const wasSuccessful = result.exitCode === 0;
+      if (wasSuccessful) {
+        console.log(`✅ Pod ${podId} completed task ${result.taskId}`);
+      } else {
+        console.error(`❌ Pod ${podId} failed task ${result.taskId}`);
+        const flowIndex = Number(result.taskId.split('-')[1].split('flow')[1]);
+        if (result.task.retriesRemaining > 0) {
+          result.task.retriesRemaining--;
+          console.log(`🔄 Retrying task ${result.taskId}, (${result.task.retriesRemaining} retries left)`);
+          const flowQueue = this.flowQueues.get(flowIndex);
+          if (flowQueue) {
+            flowQueue[0].push(result.task);
           }
+        } else {
+          console.error(`❌ Task ${result.taskId} failed and has no retries left, halting execution for Flow ${flowIndex + 1}`);
+          this.flowStatus.set(flowIndex, false);
           socket.emit('shutdown');
-          return;
-        } else {
-          const task = sgTasks.shift();
-          agent.assignTask(task!);
         }
-      });
-
-      socket.on('task-complete', (result: TaskResult) => {
-        const wasSuccessful = result.exitCode === 0;
-        if (wasSuccessful) {
-          console.log(`✅ Pod ${podId} completed task ${result.taskId}`);
-        } else {
-          console.error(`❌ Pod ${podId} failed task ${result.taskId}`);
-          const flowIndex = Number(result.taskId.split('-')[1].split('flow')[1]);
-          if (result.task.retriesRemaining > 0) {
-            result.task.retriesRemaining--;
-            const flowQueue = this.flowQueues.get(flowIndex);
-            if (flowQueue) {
-              const sgTasks = flowQueue[0];
-              sgTasks.push(result.task);
-            }
-          } else {
-            console.error(`❌ Task ${result.taskId} failed and has no retries left, halting execution for Flow ${flowIndex + 1}`);
-            this.flowStatus.set(flowIndex, false);
-            socket.emit('shutdown');
-          }
-        }
-      })
+      }
+    })
 
 
-      socket.on('connect_error', (err) => {
-        console.error('❌ Socket connection error:', err.message);
-      });
+    socket.on('connect_error', (err) => {
+      console.error('❌ Socket connection error:', err.message);
+    });
 
-      socket.on('disconnect', (reason) => {
-        console.warn('⚠️ Socket disconnected:', reason);
-        this.connectedAgents.delete(podId);
-      });
+    socket.on('disconnect', (reason) => {
+      console.warn('⚠️ Socket disconnected:', reason);
+      this.connectedAgents.delete(podId);
     });
   }
+
 }

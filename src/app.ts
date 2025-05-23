@@ -4,12 +4,13 @@ import executionRoutes from './routes/execution.routes';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import logger from './utils/logger';
+import { setupGlobalSocketHandlers } from './sockets';
 
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
 cors: {
-        origin: '*',    //! update when deploying
+        origin: '*',    //! update this when deploying
     }
 });
 
@@ -19,6 +20,7 @@ app.use('/api/executions', executionRoutes);
 
 //? bind on all interfaces
 httpServer.listen(5000, '0.0.0.0', () => console.log('🚀 HTTP Server running on port 5000'));
+setupGlobalSocketHandlers(io);
 export { io };
 
 export default app;

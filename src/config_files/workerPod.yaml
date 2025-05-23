@@ -9,14 +9,14 @@ spec:
       image: execution-controller:asdf231
       imagePullPolicy: Never
       env:
-        - name: EXECUTION_ID
-          value: "{{EXECUTION_ID}}"
+        # - name: EXECUTION_ID
+        #   value: "{{EXECUTION_ID}}"
         - name: EXTRACT_DIR
           value: "{{EXTRACT_DIR}}"
         - name: POD_ID
           value: "{{POD_ID}}"
-        - name: FLOW_GROUP_KEY
-          value: "{{FLOW_GROUP_KEY}}"
+        # - name: FLOW_GROUP_KEY
+        #   value: "{{FLOW_GROUP_KEY}}"
         - name: BLINQ_TOKEN
           value: "{{BLINQ_TOKEN}}"
         - name: SOCKET_URL

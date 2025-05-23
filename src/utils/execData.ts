@@ -15,3 +15,16 @@ export const getTasksArray = (scenarios: Scenario[], flowIndex: number, groupInd
         }
     });
 }
+
+export const parsePodId = (podId: string): { executionId: string, flowIndex: number, groupIndex: number, workerNumber: number } => {
+    //? strcuture is execId.flowX.sgY.wZ
+    const parts = podId.split('.');
+    if (parts.length !== 4) {
+        throw new Error(`Invalid podId format: ${podId}`);
+    }
+    const executionId = parts[0];
+    const flowIndex = parseInt(parts[1].replace('flow', ''));
+    const groupIndex = parseInt(parts[2].replace('sg', ''));
+    const workerNumber = parseInt(parts[3].replace('w', ''));
+    return { executionId, flowIndex, groupIndex, workerNumber };
+}

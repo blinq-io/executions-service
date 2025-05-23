@@ -4,20 +4,21 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { Task, TaskResult } from './models/execution.model';
 
-const executionId = process.env.EXECUTION_ID;
 const extractDir = process.env.EXTRACT_DIR;
 const podId = process.env.POD_ID;
-const flowGroupKey = process.env.FLOW_GROUP_KEY;
 const socketUrl = process.env.SOCKET_URL;
 
 // console.log('⚙️ ENV CHECK');
-// console.log('EXECUTION_ID:', executionId);
 // console.log('EXTRACT_DIR:', extractDir);
 // console.log('POD_ID:', podId);
-// console.log('FLOW_GROUP_KEY:', flowGroupKey);
 // console.log('SOCKET_URL:', socketUrl);
 
-if (!executionId || !extractDir || !podId || !flowGroupKey || !socketUrl) {
+//TODO
+// 1. update ready logic on the server
+// 2. remove extra envs from workerpod yaml and the server
+// 3. update the on connection logic on server
+
+if (!extractDir || !podId || !socketUrl) {
   console.error('❌ Missing required environment variables');
   process.exit(1);
 }
@@ -29,9 +30,7 @@ fs.mkdirSync(runsPath, { recursive: true });
 console.log(`🔌 Connecting to socket: ${socketUrl}`);
 const socket = io(socketUrl, {
   query: {
-    executionId,
     podId,
-    flowGroupKey,
   },
   transports: ['websocket'],
 });
@@ -58,14 +57,14 @@ socket.on('task', (task: Task) => {
     const taskResult: TaskResult = { taskId: task.id, exitCode: code, task };
     socket.emit('task-complete', taskResult);
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    socket.emit('ready', { podId, flowGroupKey });
+    socket.emit('ready', { podId });
   });
 });
 
 socket.on('connect', () => {
   console.log(`✅ Connected as ${podId}`);
   setTimeout(() => {
-    socket.emit('ready', { podId, flowGroupKey });
+    socket.emit('ready', { podId });
   }, 1000); // Give the event loop some time
 });
 
@@ -105,9 +104,9 @@ socket.on('error', (err) => {
 });
 socket.on('reconnect_attempt', (attempt) => {
   console.warn(`🔄 Reconnecting... Attempt ${attempt}`);
-  socket.emit('ready', { podId, flowGroupKey });
+  socket.emit('ready', { podId });
 });
 socket.on('reconnect', (attempt) => {
   console.log(`🔄 Reconnected on attempt ${attempt}`);
-  socket.emit('ready', { podId, flowGroupKey });
+  socket.emit('ready', { podId });
 });
