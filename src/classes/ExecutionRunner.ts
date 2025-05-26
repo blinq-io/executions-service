@@ -177,8 +177,7 @@ export class ExecutionRunner {
         EXECUTION_ID,
       });
 
-      let SKIP_SETUP = false; //!
-      if (!SKIP_SETUP) {
+      if (!process.env.SKIP_SETUP) {
         await k8sClient.applyManifestFromFile(SETUP_YAML_PATH, {
           EXECUTION_ID,
           EXTRACT_DIR,

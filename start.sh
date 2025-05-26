@@ -13,8 +13,8 @@ if [ -z "$BLINQ_TOKEN" ]; then
   exit 1
 fi
 
-if [ -z "$EXECUTION_ID" ]; then
-  echo "❌ EXECUTION_ID not set"
+if [ -z "$SOCKET_URL" ]; then
+  echo "❌ SOCKET_URL not set"
   exit 1
 fi
 
@@ -23,8 +23,19 @@ npm run build
 
 if [ "$AGENT_MODE" = "true" ]; then
   echo "🧠 Starting in agent mode..."
+
+  if [ -z "$POD_ID" ]; then
+    echo "❌ POD_ID not set"
+    exit 1
+  fi
+
   node dist/agent-entry.js
   exit 0
+fi
+
+if [ -z "$EXECUTION_ID" ]; then
+  echo "❌ EXECUTION_ID not set"
+  exit 1
 fi
 
 # Fallback to setup mode

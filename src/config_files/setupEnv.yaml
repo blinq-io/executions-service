@@ -7,7 +7,7 @@ metadata:
 spec:
   containers:
     - name: setup
-      image: execution-controller:asdf231
+      image: execution-controller:bes13
       imagePullPolicy: Never
       env:
         - name: EXTRACT_DIR
