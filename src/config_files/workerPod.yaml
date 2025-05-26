@@ -6,7 +6,7 @@ spec:
   restartPolicy: Never
   containers:
     - name: worker
-      image: execution-controller:bes13
+      image: execution-controller:osdjf24
       imagePullPolicy: Never
       env:
         # - name: EXECUTION_ID

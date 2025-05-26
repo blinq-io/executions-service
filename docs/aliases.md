@@ -30,7 +30,7 @@ alias reset='delpod "worker-$EXECUTION_ID"; delpvc "pvc-$EXECUTION_ID"'
 alias gs='gp; gpvc'
 
 ## Build and load image with dynamic tag
-alias bl="docker build -t execution-controller:bes13 . && minikube image load execution-controller:bes13"
+alias bl="docker build -t execution-controller:osdjf24 . && minikube image load execution-controller:osdjf24"
 
 ## Enter the first worker of the first pod container by full pod name
 alias enter_first="kubectl exec -it worker-$EXECUTION_ID.flow0.sg0.w0 -- bash"
