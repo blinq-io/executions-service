@@ -1,10 +1,8 @@
 import { Request, Response } from 'express';
-import ExecutionModel, { Schedule } from '../models/execution.model';
+import ExecutionModel, { ExecutionStatus, Schedule } from '../models/execution.model';
 import { ExecutionRunner } from '../classes/ExecutionRunner';
 import { TEST_CRON_EXPRESSION, THREAD_LIMIT } from '../constants';
 import { io } from '../app';
-import { updateStream } from '../utils/sse';
-import logger from '../utils/logger';
 import mongoose from 'mongoose';
 import { scheduleExecutionViaCronjob } from '../schedulers/executionScheduler';
 import { generateDynamicCronExpression } from '../utils/scheduling';
@@ -20,7 +18,7 @@ export const createExecution = async (req: Request, res: Response) => {
     await execution.save();
 
     // console.log('🚀 Sending update via stream')
-    // await updateStream();
+    // await streamUpdateToClients();
     // console.log('🚀 Update sent via stream')
 
     res.status(201).json(execution);
@@ -107,7 +105,7 @@ export const runExecution = async (req: Request, res: Response) => {
   execution.save();
 
   const runner = new ExecutionRunner(execution, io);
-  runner.start(); // trigger K8s interaction etc
+  runner.start(process.env.RUN_AS_MOCK === 'true'); // trigger K8s interaction etc
   res.json({ message: 'Execution started' });
 };
 
@@ -126,6 +124,36 @@ export const getAllExecutions = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Failed to fetch executions' });
   }
 };
+export const getActiveExecutionsStatus = async (req: Request, res: Response) => {
+  try {
+    const { projectId } = req.query;
+    process.env.projectId = String(projectId);
+
+    if (!projectId || typeof projectId !== 'string') {
+      return res.status(400).json({ error: 'Missing or invalid projectId' });
+    }
+
+    const executions = [];
+
+    for (const [id, runner] of executionRunnerRegistry.runners.entries()) {
+      if (runner.execution.projectId === projectId) {
+        executions.push(runner.execution);
+      }
+    }
+
+    const stats = executions.filter(execution => execution.running).map((e) => e._id.toString()).map((id) => executionRunnerRegistry.get(id)).filter((runner) => runner !== undefined).map((runner) => runner.executionStatus);
+
+    console.log('🔍 Active executions found:', stats);
+    if (stats.length === 0) {
+      return res.status(404).json({ error: 'No active executions found' });
+    }
+
+    res.json(stats);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch executions' });
+  }
+};
+
 
 export const getFreeThreadCount = async (req: Request, res: Response) => {
   const { projectId } = req.query;
@@ -136,6 +164,21 @@ export const getFreeThreadCount = async (req: Request, res: Response) => {
   }, 0);
   res.send(freeThreadCount);
 };
+
+export const getReportLinkByIdOfActiveExecution = async (req: Request, res: Response) => {
+  const executionId = req.params.id;
+  const runner = executionRunnerRegistry.get(executionId);
+  if (!runner) {
+    return res.status(404).json({ error: 'Execution not found or not running' });
+  }
+  const reportLink = await runner.getReportLink();
+  console.log('🔗 Sending report link for execution:', reportLink);
+  if (!reportLink) {
+    return res.status(404).json({ error: 'Report link not available for this execution' });
+  }
+  res.json({ reportLink });
+};
+
 
 export const getExecutionById = async (req: Request, res: Response) => {
   const execution = await ExecutionModel.findById(req.params.id);

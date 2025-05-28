@@ -36,6 +36,23 @@ export class KubernetesClient {
     }
   }
 
+  async getPodStatus(name: string) {
+    try {
+      const res = await this.k8sApi.readNamespacedPodStatus({
+        name,
+        namespace: this.namespace
+      });
+      return res.status ? res.status.phase : null; // Return pod phase if exists, null otherwise
+    } catch (err: any) {
+      const reason = this.extractReason(err);
+      if (reason === 'NotFound') {
+        return null;
+      }
+      throw err; // Rethrow error if it's something else
+    }
+  }
+
+
   async applyManifestFromFile(filePath: string, vars: Record<string, string>) {
     let content = fs.readFileSync(filePath, 'utf-8');
     for (const [key, value] of Object.entries(vars)) {
@@ -112,11 +129,11 @@ export class KubernetesClient {
             throw err;
           }
           break;
-      
+
         default:
           throw new Error(`Unsupported kind in YAML: ${kind}`);
       }
-      
+
     }
   }
 

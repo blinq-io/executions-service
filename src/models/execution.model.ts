@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { updateStream } from '../utils/sse';
+import { streamUpdateToClients } from '../utils/sse/executionCRUD';
 
 export interface CronJobEnvVariables {
   EXECUTION_ID: string;
@@ -71,7 +71,7 @@ const executionSchema = new Schema<Execution>({
 });
 
 function streamUpdate (doc: Execution) {
-  updateStream();
+streamUpdateToClients();
 }
 
 executionSchema.post('save', streamUpdate);
@@ -85,3 +85,11 @@ export interface Task {
   data: Scenario;
   retriesRemaining: number;
 }
+
+export type ExecutionStatus = {
+  executionId: string;
+  totalScenarios: number;
+  scenariosPassed: number;
+  scenariosFailed: number;
+  startTime: Date;
+};

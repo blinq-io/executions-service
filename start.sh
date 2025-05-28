@@ -13,10 +13,7 @@ if [ -z "$BLINQ_TOKEN" ]; then
   exit 1
 fi
 
-if [ -z "$SOCKET_URL" ]; then
-  echo "❌ SOCKET_URL not set"
-  exit 1
-fi
+
 
 npm i --save-dev @types/ws
 npm run build
@@ -26,6 +23,11 @@ if [ "$AGENT_MODE" = "true" ]; then
 
   if [ -z "$POD_ID" ]; then
     echo "❌ POD_ID not set"
+    exit 1
+  fi
+  
+  if [ -z "$SOCKET_URL" ]; then
+    echo "❌ SOCKET_URL not set"
     exit 1
   fi
 

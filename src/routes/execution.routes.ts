@@ -11,9 +11,11 @@ import {
     deleteFlow,
     scheduleExecution,
     descheduleExecution,
-    haltExecution
+    haltExecution,
+    getActiveExecutionsStatus,
+    getReportLinkByIdOfActiveExecution
 } from '../controllers/executionController';
-import { clearStreamHook, setStreamHook } from '../utils/sse';
+import { addNewStreamListener, removeStreamListener } from '../utils/general';
 
 const router = Router();
 
@@ -24,7 +26,7 @@ router.get('/stream', (req, res) => {
     res.setHeader('Connection', 'keep-alive');
     res.flushHeaders();
 
-    setStreamHook(res);
+    addNewStreamListener(res, 'crud');
 
     const keepAlive = setInterval(() => {
         res.write(': keep-alive\n\n');
@@ -32,8 +34,28 @@ router.get('/stream', (req, res) => {
 
     req.on('close', () => {
         clearInterval(keepAlive);
-        clearStreamHook(res);
-        console.log('🔌 SSE client disconnected');
+        removeStreamListener(res, 'crud');
+        console.log('🔌 SSE_crud client disconnected');
+    });
+});
+router.get('/status/active', (req, res) => {
+    const { projectId } = req.query;
+    process.env.projectId = String(projectId);
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.flushHeaders();
+
+    addNewStreamListener(res, 'status');
+
+    const keepAlive = setInterval(() => {
+        res.write(': keep-alive\n\n');
+    }, 1000);
+
+    req.on('close', () => {
+        clearInterval(keepAlive);
+        removeStreamListener(res, 'status');
+        console.log('🔌 SSE_status client disconnected');
     });
 });
 
@@ -44,6 +66,7 @@ router.post('/schedule/:id', scheduleExecution);
 router.post('/deschedule/:id', descheduleExecution);
 router.post('/halt/:id', haltExecution);
 router.get('/free-thread-count', getFreeThreadCount);
+router.get('/report-link/:id', getReportLinkByIdOfActiveExecution);
 router.get('/:id', getExecutionById);
 router.put('/:id', updateExecution);
 router.delete('/:id', deleteExecution);

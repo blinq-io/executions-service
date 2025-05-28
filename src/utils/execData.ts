@@ -28,3 +28,17 @@ export const parsePodId = (podId: string): { executionId: string, flowIndex: num
     const workerNumber = parseInt(parts[3].replace('w', ''));
     return { executionId, flowIndex, groupIndex, workerNumber };
 }
+
+export const injectRunIdInScenarios = (scenarios: Scenario[], runId: string, projectId: string): Scenario[] => {
+    return scenarios.map((scenario) => {
+        //? let command = "npx cross-env NODE_ENV_BLINQ=stage BLINQ_ENV='environments/google2.json' TOKEN=2f474b397dcc1b898e958d1b7de926f6 HEADLESS='true' cucumber-js --format bvt --name 'Search for javascript' 'features/Search functionality.feature'";
+        
+        let command = scenario.command.split(' ');
+        const index = command.indexOf("HEADLESS='true'");
+        command.splice(index + 1, 0, `RUN_ID=${runId}`, `PROJECT_ID=${projectId}`);
+        
+        scenario.command = command.join(' ');
+
+        return scenario;
+    })
+}

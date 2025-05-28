@@ -1,7 +1,7 @@
 import { ExecutionRunner } from './ExecutionRunner';
 
 class ExecutionRunnerRegistry {
-  private runners: Map<string, ExecutionRunner> = new Map();
+  public runners: Map<string, ExecutionRunner> = new Map();
 
   set(executionId: string, runner: ExecutionRunner) {
     this.runners.set(executionId, runner);

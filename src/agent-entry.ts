@@ -70,12 +70,6 @@ socket.on('connect', () => {
 
 socket.on('shutdown', async () => {
   console.log(`🛑 Shutdown signal received. Disconnecting...`);
-  try {
-    await new Promise((resolve) => socket.once('disconnect', resolve));
-    console.log(`✅ Disconnected cleanly`);
-  } catch (err) {
-    console.error(`❌ Error during disconnect`, err);
-  }
   process.exit(0);
 });
 
@@ -91,9 +85,9 @@ socket.on('hello', (msg) => {
 socket.emit('hello', 'world');
 
 socket.on('disconnect', (reason) => {
-  console.warn(`❌ Disconnected: ${reason}`);
-  process.exit(1);
+    console.warn(`❌ Disconnected: ${reason}`);
 });
+
 socket.on('connect_error', (err) => {
   console.error('❌ Socket connection error:', err.message, err);
   process.exit(1);
