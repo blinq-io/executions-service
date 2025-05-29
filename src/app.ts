@@ -3,7 +3,6 @@ import cors from 'cors';
 import executionRoutes from './routes/execution.routes';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
-import logger from './utils/logger';
 import { setupGlobalSocketHandlers } from './sockets';
 
 const app = express();
@@ -26,7 +25,7 @@ app.use('/api/executions', (req, res, next) => {
 const PORT = Number(process.env.PORT) || 5000;
 
 //? bind on all interfaces
-httpServer.listen(PORT, '0.0.0.0', () => console.log('🚀 HTTP Server running on port 5002'));
+httpServer.listen(PORT, '0.0.0.0', () => console.log('🚀 HTTP Server running on port', PORT));
 setupGlobalSocketHandlers(io);
 export { io };
 

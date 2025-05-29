@@ -70,8 +70,8 @@ const executionSchema = new Schema<Execution>({
   running: Boolean,
 });
 
-function streamUpdate (doc: Execution) {
-streamUpdateToClients();
+function streamUpdate(doc: Execution) {
+  streamUpdateToClients();
 }
 
 executionSchema.post('save', streamUpdate);

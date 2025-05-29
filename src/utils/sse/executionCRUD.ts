@@ -1,43 +1,21 @@
-//? The stream is set up to send updates to the client whenever there are changes in the execution data.
-//TODO Later
-import { Response } from 'express';
 import executionModel from '../../models/execution.model';
-
-let clients: Response[] = [];
-
-export function addNewStreamClient(res: Response) {
-  // Add the new connection to the array
-  clients.push(res);
-}
-
-export function removeStreamClient(res: Response) {
-  // Remove the closed connection from the array
-  clients = clients.filter((hook) => hook !== res);
-}
+import { io } from '../../app'; // Or wherever your `io` instance is exported
 
 export async function streamUpdateToClients() {
-  if (clients.length === 0) {
-    console.warn('⚠️ No active SSE clients to send updates to');
-    return;
-  }
   try {
-    if(process.env.projectId === undefined) {
+    if (process.env.projectId === undefined) {
       console.error('❌ projectId is undefined, cannot update stream');
       return;
     }
-    const executions = await executionModel.find({projectId: process.env.projectId});
-    console.log('🚀 Sending update via stream');
 
-    clients.forEach((hook) => {
-      if (hook.writableEnded || hook.headersSent === false) {
-        console.warn('⚠️ Skipping client, connection is closed or invalid');
-      } else {
-        hook.write(`data: ${JSON.stringify(executions)}\n\n`);
-      }
-    });
+    const executions = await executionModel.find({ projectId: process.env.projectId });
+    console.log('🚀 Sending update via WebSocket');
 
-    console.log('✅ Update sent via stream');
+    // Emit to all frontend clients subscribed to the "execution-crud" room
+    io.to('execution-crud').emit('crudUpdate', executions);
+
+    console.log('✅ Update sent via WebSocket');
   } catch (err) {
-    console.error('❌ Failed to fetch executions for SSE:', err);
+    console.error('❌ Failed to fetch executions for socket.io stream:', err);
   }
 }
