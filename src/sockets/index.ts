@@ -2,30 +2,33 @@
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { parsePodId, getFlowGroupKey } from '../utils/execData';
 import { executionRunnerRegistry } from '../classes/ExecutionRunnerRegistry';
+import { sendLatestStatusDataToNewClient } from '../utils/sse/executionStatus';
 
 export function setupGlobalSocketHandlers(io: SocketIOServer) {
   io.on('connection', (socket: Socket) => {
     const podId = socket.handshake.query.podId as string;
+    const fromClient = socket.handshake.query.fromClient;
     
-    if (!podId) {
-      console.log(`🧑‍💻 [Frontend] WebSocket connected: ${socket.id}`);
-
+    if (fromClient) {
       socket.on('subscribeToExecutionCrud', (projectId: string) => {
         if (projectId) {
-          socket.join('execution-crud:${projectId}`);');
+          socket.join(`execution-crud:${projectId}`);
+          console.log(`✅ [Frontend] Joined execution-crud:${projectId}`);
         }
       });
-
       socket.on('subscribeToExecutionStatus', (projectId: string) => {
         if (projectId) {
           socket.join(`execution-status:${projectId}`);
+          console.log(`✅ [Frontend] Joined execution-status:${projectId}`);
+
+          sendLatestStatusDataToNewClient(socket, projectId);
         }
       });
-
       socket.on('disconnect', () => {
         console.log(`❌ [Frontend] WebSocket disconnected: ${socket.id}`);
       });
-    } else {
+    } 
+    if(podId) {
       let parsed;
       try {
         parsed = parsePodId(podId);

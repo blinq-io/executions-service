@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { streamUpdateToClients } from '../utils/sse/executionCRUD';
+import { updateExecutionsOnCrud } from '../utils/sse/executionCRUD';
 
 export interface CronJobEnvVariables {
   EXECUTION_ID: string;
@@ -68,10 +68,10 @@ const executionSchema = new Schema<Execution>({
   userId: String,
   projectId: String,
   running: Boolean,
-});
+}, { timestamps: true });
 
 function streamUpdate(doc: Execution) {
-  streamUpdateToClients();
+  updateExecutionsOnCrud(doc.projectId);
 }
 
 executionSchema.post('save', streamUpdate);

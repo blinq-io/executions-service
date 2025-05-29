@@ -4,11 +4,34 @@
 
 ## 1.5 Unable to open browser inside the docker due to headless reasons -> ✅ Done
 
-## 2. Run a flow with more than one sg -> Here
-### -> Current active sg function logic
+## 2. Run a flow with more than one sg -> Here -> ✅ done
+### -> Current active sg function logic -> ✅ done
 
-## 3. Generate Reports in a organized structure
+## 3. Generate Reports in a organized structure -> ✅ done
 ### -> Concurrency issues while writing?
+
+## 3.5 Deployment -> ⭕ Doing
+    - 
+
+## 4. Global Test Data
+
+## 5. How to recover if the server crashes ⭐⭐⭐⭐⭐ NEXT BIG CHALLENGE
+    - Restore running execution states
+        - task queues for each flow
+        - resume execution from that point on
+    - How to append to the Report ❗❗❗
+        - need a new route in cucumber js to interact with the Runs collection in Mongo DB
+        - either Append to the original run id
+        - or Create a new run id and migrate the reports of finish scenarios and delete the original
+
+## Improvement Tasks, after basic functionality
+    - Look into messaging queues
+    - actively probe potential problems in the current implementation
+    - Implement better monitoring and visibilty of the cluster
+
+## Final tasks, non essential ones
+    - Since we are using web sockets between main-app and executions-service maybe we can convert the CRUD routes to use sockets?? should we?
+    - 
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

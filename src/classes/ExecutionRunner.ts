@@ -7,9 +7,8 @@ import { KubernetesClient } from './KubernetesClient';
 import { BACKEND_SOCKET_URL, FINISHED_FLOW_SIGNAL, FINISHED_SG_SIGNAL, PVC_YAML_PATH, SETUP_YAML_PATH } from '../constants';
 import { generateWorkerYaml } from '../config_files/generateWorkerYaml';
 import { getFlowGroupKey, getTasksArray, injectRunIdInScenarios, parsePodId } from '../utils/execData';
-import logger from '../utils/logger';
 import { executionRunnerRegistry } from './ExecutionRunnerRegistry';
-import { streamUpdateToClients as sendUpdatedStatus } from '../utils/sse/executionStatus';
+import { updateRunnerStatus } from '../utils/sse/executionStatus';
 import { createRun } from '../utils/general';
 
 export class ExecutionRunner {
@@ -55,10 +54,10 @@ export class ExecutionRunner {
 
   private simulateMockExecution = async () => {
     const id = setInterval(() => console.log('🧪 Mock execution running...'), 5000);
-    let duration = this.executionStatus.totalScenarios * 2000; // Simulate 2 seconds per scenario
+    let duration = this.executionStatus.totalScenarios * 50000; // Simulate 2 seconds per scenario
     const interval = setInterval(() => {
       this.updateStatus(Math.random() > 0.5);
-    }, 2000)
+    }, 50000)
     await new Promise((res) => setTimeout(res, duration));
     clearInterval(interval);
     clearInterval(id);
@@ -69,7 +68,6 @@ export class ExecutionRunner {
   }
 
   private getActiveGroupIndex = (flowIndex: number): number => {
-    console.log('🍊');
     for(let [id, queue] of this.flowQueues.entries()) {
       console.log(`🚀 Flow ${id} -> `, JSON.stringify(queue, null, 2));
     }
@@ -182,7 +180,8 @@ export class ExecutionRunner {
   public async start(mock = false) {
     this.executionStatus.startTime = new Date();
     executionRunnerRegistry.set(this.execution._id.toString(), this);
-    sendUpdatedStatus();
+    
+    updateRunnerStatus(this.execution._id, this.execution.projectId, this.executionStatus);
 
     if (mock) {
       this.simulateMockExecution()
@@ -194,11 +193,10 @@ export class ExecutionRunner {
   // ✅ Works
   private async spawnPods() {
     const k8sClient = new KubernetesClient();
-    const pvcName = `pvc-${this.execution._id}`;
     const setupPodName = `setup-${this.execution._id}`;
+    const EXECUTION_ID = this.execution._id;
     const EXTRACT_DIR = this.execution.projectId;
     const BLINQ_TOKEN = process.env.BLINQ_TOKEN!;
-    const EXECUTION_ID = this.execution._id;
     const NODE_ENV_BLINQ = process.env.NODE_ENV_BLINQ || 'dev';
 
     try {
@@ -248,7 +246,7 @@ export class ExecutionRunner {
     } else {
       this.executionStatus.scenariosFailed++;
     }
-    sendUpdatedStatus();
+    updateRunnerStatus(this.execution._id, this.execution.projectId, this.executionStatus);
   }
 
   public handlePodConnection(socket: Socket, parsed: ReturnType<typeof parsePodId>) {

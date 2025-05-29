@@ -22,7 +22,7 @@ app.use('/api/executions', (req, res, next) => {
     next();
   }, executionRoutes);
 
-const PORT = Number(process.env.PORT) || 5000;
+const PORT = 5003;
 
 //? bind on all interfaces
 httpServer.listen(PORT, '0.0.0.0', () => console.log('🚀 HTTP Server running on port', PORT));

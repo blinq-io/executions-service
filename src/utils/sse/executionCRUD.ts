@@ -1,21 +1,14 @@
+import { io } from '../../app';
 import executionModel from '../../models/execution.model';
-import { io } from '../../app'; // Or wherever your `io` instance is exported
 
-export async function streamUpdateToClients() {
+export async function updateExecutionsOnCrud(projectId: string) {
   try {
-    if (process.env.projectId === undefined) {
-      console.error('❌ projectId is undefined, cannot update stream');
+    if (!projectId) {
       return;
     }
-
-    const executions = await executionModel.find({ projectId: process.env.projectId });
-    console.log('🚀 Sending update via WebSocket');
-
-    // Emit to all frontend clients subscribed to the "execution-crud" room
-    io.to('execution-crud').emit('crudUpdate', executions);
-
-    console.log('✅ Update sent via WebSocket');
+    const executions = await executionModel.find({ projectId });
+    io.to(`execution-crud:${projectId}`).emit('crudUpdate', executions);
   } catch (err) {
-    console.error('❌ Failed to fetch executions for socket.io stream:', err);
+    console.error('❌ Failed to send updated executions via socket.io:', err);
   }
 }

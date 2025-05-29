@@ -1,29 +1,3 @@
-import { addNewStreamClient as AddCRUDclient, removeStreamClient as removeCRUDclient } from "./sse/executionCRUD";
-import { Response } from 'express';
-import { addNewStreamClient as AddStatusClient, removeStreamClient as removeStatusClient } from "./sse/executionStatus";
-
-
-export function addNewStreamListener(res: Response, eventType: 'crud' | 'status') {
-  switch (eventType) {
-    case 'crud':
-      AddCRUDclient(res);
-      break;
-    case 'status':
-      AddStatusClient(res);
-      break;
-  }
-}
-export function removeStreamListener(res: Response, eventType: 'crud' | 'status') {
-  switch (eventType) {
-    case 'crud':
-      removeCRUDclient(res);
-      break;
-    case 'status':
-      removeStatusClient(res);
-      break;
-  }
-}
-
 export const createRun = async (name: string, TOKEN: string, env: string) => {
   const baseUrl = env === 'app' ? `https://api.blinq.io/api/runs/cucumber-runs/create` : `https://${env}.api.blinq.io/api/runs/cucumber-runs/create`;
   try {
@@ -39,9 +13,8 @@ export const createRun = async (name: string, TOKEN: string, env: string) => {
         body: JSON.stringify({ name }),
       }
     );
-    console.log('🔱', JSON.stringify(response, null, 2))
     if (!response.ok) {
-      const errorBody = await response.text(); // or try response.json() if you expect JSON
+      const errorBody = await response.text();
       console.error(`❌ HTTP error! status: ${response.status}`);
       console.error(`❌ Response body:`, errorBody);
       throw new Error(`HTTP error! status: ${response.status}`);

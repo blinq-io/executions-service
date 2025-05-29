@@ -103,7 +103,7 @@ export const runExecution = async (req: Request, res: Response) => {
   execution.save();
 
   const runner = new ExecutionRunner(execution, io);
-  runner.start(process.env.RUN_AS_MOCK === 'true'); // trigger K8s interaction etc
+  runner.start(process.env.RUN_AS_MOCK === 'true');
   res.json({ message: 'Execution started' });
 };
 
@@ -170,7 +170,6 @@ export const getReportLinkByIdOfActiveExecution = async (req: Request, res: Resp
     return res.status(404).json({ error: 'Execution not found or not running' });
   }
   const reportLink = await runner.getReportLink();
-  console.log('🔗 Sending report link for execution:', reportLink);
   if (!reportLink) {
     return res.status(404).json({ error: 'Report link not available for this execution' });
   }
