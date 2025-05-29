@@ -6,8 +6,8 @@ spec:
   restartPolicy: Never
   containers:
     - name: worker
-      image: execution-controller:gasc213
-      imagePullPolicy: Never
+      image: blinqio/exec-worker-dev
+      imagePullPolicy: Always
       env:
         # - name: EXECUTION_ID
         #   value: "{{EXECUTION_ID}}"

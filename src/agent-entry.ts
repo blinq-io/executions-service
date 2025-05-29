@@ -6,7 +6,8 @@ import { Task, TaskResult } from './models/execution.model';
 
 const extractDir = process.env.EXTRACT_DIR;
 const podId = process.env.POD_ID;
-const socketUrl = process.env.SOCKET_URL;
+// const socketUrl = process.env.SOCKET_URL;
+const socketUrl = 'ws://blinq-backend:5000';
 
 // console.log('⚙️ ENV CHECK');
 // console.log('EXTRACT_DIR:', extractDir);

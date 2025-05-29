@@ -93,11 +93,9 @@ export const runExecution = async (req: Request, res: Response) => {
 
   const envVariables = req.body;
 
-  console.log('⚙️ Environment variables:', envVariables);
 
   // set the process.env variables
   for (const [key, value] of Object.entries(envVariables)) {
-    console.log(`🌲 Setting ${key} to ${value}`);
     process.env[key] = String(value);
   }
 

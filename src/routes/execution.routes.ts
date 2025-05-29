@@ -19,7 +19,6 @@ import { addNewStreamListener, removeStreamListener } from '../utils/general';
 
 const router = Router();
 
-// ? SSE attempt, not working yet, TODO later
 router.get('/stream', (req, res) => {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');

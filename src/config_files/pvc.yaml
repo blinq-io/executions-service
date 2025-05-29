@@ -5,7 +5,8 @@ metadata:
   name: pvc-<EXECUTION_ID>
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
+  storageClassName: gp2
   resources:
     requests:
       storage: 1Gi

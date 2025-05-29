@@ -7,8 +7,8 @@ metadata:
 spec:
   containers:
     - name: setup
-      image: execution-controller:gasc213
-      imagePullPolicy: Never
+      image: blinqio/exec-worker-dev
+      imagePullPolicy: Always
       env:
         - name: EXTRACT_DIR
           value: <EXTRACT_DIR>
