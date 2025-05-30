@@ -9,7 +9,7 @@ import { generateWorkerYaml } from '../config_files/generateWorkerYaml';
 import { getFlowGroupKey, getTasksArray, injectRunIdInScenarios, parsePodId } from '../utils/execData';
 import { executionRunnerRegistry } from './ExecutionRunnerRegistry';
 import { updateRunnerStatus } from '../utils/sse/executionStatus';
-import { createRun } from '../utils/general';
+import { createRun, updateExecution } from '../utils/general';
 
 export class ExecutionRunner {
   private io: SocketIOServer;
@@ -63,8 +63,12 @@ export class ExecutionRunner {
     clearInterval(id);
     console.log('🧪 Mock execution finished')
 
-    this.execution.running = false;
-    this.execution.save();
+    // this.execution.running = false;
+    // await this.execution.save();
+    await updateExecution(this.execution._id, {
+      key: 'running',
+      value: false,
+    });
   }
 
   private getActiveGroupIndex = (flowIndex: number): number => {
@@ -150,8 +154,12 @@ export class ExecutionRunner {
     }
     console.log(`🛑 Stopping execution ${this.execution._id}...`);
 
-    this.execution.running = false;
-    this.execution.save();
+    // this.execution.running = false;
+    // await this.execution.save();
+    await updateExecution(this.execution._id, {
+      key: 'running',
+      value: false,
+    });
 
     const k8sClient = new KubernetesClient();
 

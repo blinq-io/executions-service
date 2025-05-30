@@ -1,3 +1,5 @@
+import executionModel from "../models/execution.model";
+
 export const createRun = async (name: string, TOKEN: string, env: string) => {
   const baseUrl = env === 'app' ? `https://api.blinq.io/api/runs/cucumber-runs/create` : `https://${env}.api.blinq.io/api/runs/cucumber-runs/create`;
   try {
@@ -28,3 +30,15 @@ export const createRun = async (name: string, TOKEN: string, env: string) => {
     return false;
   }
 };
+
+export const updateExecution = async (execId: string, update: {
+  key: string;
+  value: any;
+}) => {
+  const { key, value } = update;
+  await executionModel.findByIdAndUpdate(
+    execId,
+    { [key]: value },
+    { new: true, runValidators: true }
+  );
+}
