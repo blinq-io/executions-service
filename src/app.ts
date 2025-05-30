@@ -25,7 +25,7 @@ app.use('/api/executions', (req, res, next) => {
 const PORT = 5003;
 
 //? bind on all interfaces
-httpServer.listen(PORT, '0.0.0.0', () => console.log('🚀 HTTP Server running on port', PORT));
+httpServer.listen(PORT, '0.0.0.0', () => console.log('🚀 WS Server running on port', PORT));
 setupGlobalSocketHandlers(io);
 export { io };
 

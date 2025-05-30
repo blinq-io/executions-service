@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/playwright:v1.52.0-jammy
 
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
+COPY package.json package-lock.json tsconfig.json ./
 
 RUN npm install -g typescript && npm install
 
@@ -10,6 +10,6 @@ COPY . .
 
 RUN chmod +x environment-setup.sh start.sh
 
-RUN tsc src/agent-entry.ts
+RUN tsc --project tsconfig.json
 
 CMD ["./start.sh"]

@@ -3,11 +3,12 @@ import { exec } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
 import { Task, TaskResult } from './models/execution.model';
+import { BACKEND_SOCKET_URL } from './constants';
 
 const extractDir = process.env.EXTRACT_DIR;
 const podId = process.env.POD_ID;
 // const socketUrl = process.env.SOCKET_URL;
-const socketUrl = 'ws://blinq-backend:5000';
+const socketUrl = BACKEND_SOCKET_URL;
 
 // console.log('⚙️ ENV CHECK');
 // console.log('EXTRACT_DIR:', extractDir);

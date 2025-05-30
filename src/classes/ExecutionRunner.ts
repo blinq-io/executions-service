@@ -54,10 +54,10 @@ export class ExecutionRunner {
 
   private simulateMockExecution = async () => {
     const id = setInterval(() => console.log('🧪 Mock execution running...'), 5000);
-    let duration = this.executionStatus.totalScenarios * 50000; // Simulate 2 seconds per scenario
+    let duration = this.executionStatus.totalScenarios * 5000; // Simulate 2 seconds per scenario
     const interval = setInterval(() => {
       this.updateStatus(Math.random() > 0.5);
-    }, 50000)
+    }, 5000)
     await new Promise((res) => setTimeout(res, duration));
     clearInterval(interval);
     clearInterval(id);

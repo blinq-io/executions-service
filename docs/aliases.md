@@ -47,3 +47,9 @@ kubectl cp ./env2.sh worker-681f5cec9074438ede56819f.flow0.sg0.w0:/app/environme
 kubectl create job --from=cronjob/exec-6824974c57dcbb2349d25366 manual-trigger-job
 
 kubectl create job --from=cronjob/exec-6824804f1f29cb1558a4d3be manual-trigger-job
+
+# build and push docker image to registry
+> docker buildx build --no-cache --platform linux/amd64,linux/arm64 -f Dockerfile.worker -t blinqio/exec-worker-dev --push .
+
+
+

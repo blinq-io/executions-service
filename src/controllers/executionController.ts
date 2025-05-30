@@ -7,10 +7,11 @@ import mongoose from 'mongoose';
 import { scheduleExecutionViaCronjob } from '../schedulers/executionScheduler';
 import { generateDynamicCronExpression } from '../utils/scheduling';
 import { exec } from 'child_process';
-import util from 'util';
+import { promisify } from 'util';
+
 import { executionRunnerRegistry } from '../classes/ExecutionRunnerRegistry';
 
-const execAsync = util.promisify(exec);
+const execAsync = promisify(exec);
 export const createExecution = async (req: Request, res: Response) => {
   try {
     const execution = new ExecutionModel(req.body);
