@@ -7,22 +7,16 @@ import { BACKEND_SOCKET_URL } from './constants';
 
 const extractDir = process.env.EXTRACT_DIR;
 const podId = process.env.POD_ID;
-// const socketUrl = process.env.POD_CLIENT_SOCKET_URL;
-// const socketUrl = 'http://host.docker.internal:5003';
-const socketUrl = 'http://dev.api.blinq.io/';
 
-// console.log('⚙️ ENV CHECK');
-// console.log('EXTRACT_DIR:', extractDir);
-// console.log('POD_ID:', podId);
-// console.log('SOCKET_URL:', socketUrl);
-
-//TODO
-// 1. update ready logic on the server
-// 2. remove extra envs from workerpod yaml and the server
-// 3. update the on connection logic on server
+// const socketUrl = 'http://host.docker.internal:5003'; // for local dev and testing
+const socketUrl = process.env.BACKEND_SOCKET_URL;
 
 if (!extractDir || !podId || !socketUrl) {
-  console.error('❌ Missing required environment variables');
+  console.error('❌ Missing required environment variables', {
+    extractDir,
+    podId,
+    socketUrl,
+  });
   process.exit(1);
 }
 
@@ -32,9 +26,8 @@ fs.mkdirSync(runsPath, { recursive: true });
 
 console.log(`🔌 Connecting to socket: ${socketUrl}`);
 const socket = io(socketUrl, {
-  query: {
-    podId,
-  },
+  path: '/api/executions/ws',
+  query: { podId },
   transports: ['websocket'],
 });
 
@@ -88,7 +81,7 @@ socket.on('hello', (msg) => {
 socket.emit('hello', 'world');
 
 socket.on('disconnect', (reason) => {
-    console.warn(`❌ Disconnected: ${reason}`);
+  console.warn(`❌ Disconnected: ${reason}`);
 });
 
 socket.on('connect_error', (err) => {

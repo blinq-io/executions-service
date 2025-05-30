@@ -12,6 +12,7 @@
 
 ## 3.5 Deployment -> ⭕ Doing
     - 
+    - handle graceful pod cleanup for workers
 
 ## 4. Global Test Data
 
