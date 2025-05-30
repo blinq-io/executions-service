@@ -51,5 +51,7 @@ kubectl create job --from=cronjob/exec-6824804f1f29cb1558a4d3be manual-trigger-j
 # build and push docker image to registry
 > docker buildx build --no-cache --platform linux/amd64,linux/arm64 -f Dockerfile.worker -t blinqio/exec-worker-dev --push .
 
+> docker buildx build --no-cache --platform linux/amd64,linux/arm64 -f Dockerfile.server -t blinqio/executions-service:dev1 --push .
+
 
 

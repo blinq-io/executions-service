@@ -8,7 +8,8 @@ import { BACKEND_SOCKET_URL } from './constants';
 const extractDir = process.env.EXTRACT_DIR;
 const podId = process.env.POD_ID;
 // const socketUrl = process.env.POD_CLIENT_SOCKET_URL;
-const socketUrl = 'http://host.docker.internal:5003';
+// const socketUrl = 'http://host.docker.internal:5003';
+const socketUrl = 'http://dev.api.blinq.io/api/executions/ws';
 
 // console.log('⚙️ ENV CHECK');
 // console.log('EXTRACT_DIR:', extractDir);
