@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { WORKER_YAML_PATH } from '../constants';
 
 interface WorkerYamlOptions {
   EXECUTION_ID: string;
@@ -11,7 +12,8 @@ interface WorkerYamlOptions {
 }
 
 export function generateWorkerYaml(options: WorkerYamlOptions): string {
-  const templatePath = path.join(__dirname, 'workerPod.yaml');
+  // const templatePath = path.join(__dirname, 'workerPod.yaml');
+  const templatePath = WORKER_YAML_PATH;
   const template = fs.readFileSync(templatePath, 'utf-8');
   const filled = template
     .replace(/{{EXECUTION_ID}}/g, options.EXECUTION_ID)
