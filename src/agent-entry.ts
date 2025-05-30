@@ -7,8 +7,8 @@ import { BACKEND_SOCKET_URL } from './constants';
 
 const extractDir = process.env.EXTRACT_DIR;
 const podId = process.env.POD_ID;
-// const socketUrl = process.env.SOCKET_URL;
-const socketUrl = BACKEND_SOCKET_URL;
+// const socketUrl = process.env.POD_CLIENT_SOCKET_URL;
+const socketUrl = 'http://host.docker.internal:5003';
 
 // console.log('⚙️ ENV CHECK');
 // console.log('EXTRACT_DIR:', extractDir);
