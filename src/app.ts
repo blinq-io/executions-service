@@ -10,23 +10,28 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/executions', (req, res, next) => {
+  // prevent collisions with WebSocket route
+  console.log('🔥 req.path is', req.path)
+  if (req.path.startsWith('/ws')) return next('route');
   console.log(`🚀 [ExecutionRoutes] ${req.method} ${req.originalUrl}`);
   next();
 }, executionRoutes);
 
+// ⚠️ Do NOT mount `io` until AFTER Express setup
 const httpServer = createServer(app);
-
 const io = new Server(httpServer, {
   path: '/api/executions/ws',
   cors: {
-    origin: '*',    //! update this when deploying
-  }
+    origin: '*', // For development, restrict later
+  },
 });
 
-const PORT = 5003;
-//? bind on all interfaces
-httpServer.listen(PORT, '0.0.0.0', () => console.log('🚀 WS Server running on port', PORT));
 setupGlobalSocketHandlers(io);
-export { io };
 
+const PORT = 5003;
+httpServer.listen(PORT, '0.0.0.0', () =>
+  console.log('🚀 WS Server running on port', PORT)
+);
+
+export { io };
 export default app;

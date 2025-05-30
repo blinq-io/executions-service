@@ -55,3 +55,5 @@ kubectl create job --from=cronjob/exec-6824804f1f29cb1558a4d3be manual-trigger-j
 
 
 
+# restart executions-service deployment
+> kubectl patch deployment executions-service -p \\n  "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"date\":\"$(date +%s)\"}}}}}";  kubectl rollout restart deployment executions-service
