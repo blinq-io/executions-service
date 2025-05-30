@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: blinqio/executions-service:dev1
+          image: blinqio/executions-service
           imagePullPolicy: Always
           ports:
             - containerPort: 5002
