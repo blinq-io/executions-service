@@ -33,14 +33,14 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: exectutions-service
+                name: executions-service
                 port:
                   number: 5002
           - path: /api/executions
             pathType: Prefix
             backend:
               service:
-                name: exectutions-service
+                name: executions-service
                 port:
                   number: 5003
           
