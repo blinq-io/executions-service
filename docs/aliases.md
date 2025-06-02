@@ -61,4 +61,5 @@ kubectl create job --from=cronjob/exec-6824804f1f29cb1558a4d3be manual-trigger-j
 # Restart server with the latest image
 > docker buildx build --no-cache --platform linux/amd64,linux/arm64 -f Dockerfile.server -t blinqio/executions-service:dev1 --push .; es_restart;
 
-# Restart
+# Restart - rebuild the server and restart helm
+> alias helm_rs='docker buildx build --no-cache --platform linux/amd64,linux/arm64 -f Dockerfile.server -t blinqio/executions-service-dev --push .;cd charts/charts-dev ;helm upgrade executions ./executions-chart -f executions-chart/values.yaml; cd ../..'

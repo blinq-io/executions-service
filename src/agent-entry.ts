@@ -3,20 +3,19 @@ import { exec } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
 import { Task, TaskResult } from './models/execution.model';
-import { BACKEND_SOCKET_URL } from './constants';
 
 const extractDir = process.env.EXTRACT_DIR;
 const podId = process.env.POD_ID;
 
 // const socketUrl = 'http://host.docker.internal:5003'; // for local dev and testing
-const socketUrl = process.env.BACKEND_SOCKET_URL;
+const socketUrl = process.env.SOCKET_URL;
 if(!socketUrl) {
-  console.error('❌ BACKEND_SOCKET_URL environment variable is not set.');
+  console.error('❌ SOCKET_URL environment variable is not being sent correctly from the server.');
   process.exit(1);
 }
 console.log(`🔌 Connecting to socket: ${socketUrl}`);
 const socket = io(socketUrl, {
-  path: '/api/executions/ws',
+  path: '/ws',
   query: { podId },
   transports: ['websocket'],
 });

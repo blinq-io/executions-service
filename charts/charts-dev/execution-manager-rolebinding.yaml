@@ -1,7 +1,8 @@
+# execution-manager-rolebinding.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: pvc-manager-binding
+  name: execution-manager-binding
   namespace: default
 subjects:
   - kind: ServiceAccount
@@ -9,5 +10,5 @@ subjects:
     namespace: default
 roleRef:
   kind: Role
-  name: pvc-manager
+  name: execution-manager
   apiGroup: rbac.authorization.k8s.io

@@ -11,6 +11,8 @@ import { executionRunnerRegistry } from './ExecutionRunnerRegistry';
 import { updateRunnerStatus } from '../utils/sse/executionStatus';
 import { createRun, updateExecution } from '../utils/general';
 
+console.log('✅', BACKEND_SOCKET_URL)
+
 export class ExecutionRunner {
   private io: SocketIOServer;
   public execution: Execution;
@@ -63,12 +65,12 @@ export class ExecutionRunner {
     clearInterval(id);
     console.log('🧪 Mock execution finished')
 
-    // this.execution.running = false;
-    // await this.execution.save();
-    await updateExecution(this.execution._id, {
-      key: 'running',
-      value: false,
-    });
+    this.execution.running = false;
+    await this.execution.save();
+    // await updateExecution(this.execution._id, {
+    //   key: 'running',
+    //   value: false,
+    // });
   }
 
   private getActiveGroupIndex = (flowIndex: number): number => {
@@ -122,13 +124,16 @@ export class ExecutionRunner {
   }
 
   private agentCleanup = async (k8sClient: KubernetesClient, agent: ExecutionPodAgent) => {
+    console.log('🧹 Cleaning up agent:', agent.id);
     agent.socket.emit('shutdown');
+    const workerId = 'worker-' + agent.id;
     try {
-      await k8sClient.deletePod(agent.id);
+      await k8sClient.deletePod(workerId);
     } catch (err: any) {
-      console.warn(`⚠️ Failed to delete pod ${agent.id}:`, err.message);
+      console.warn(`⚠️ Failed to delete pod ${workerId}:`, err.message);
     }
   }
+
 
   private async initializeQueues() {
     this.runId = 'loading';
@@ -155,19 +160,15 @@ export class ExecutionRunner {
       return;
     }
     console.log(`🛑 Stopping execution ${this.execution._id}...`);
-
-    // this.execution.running = false;
-    // await this.execution.save();
-    await updateExecution(this.execution._id, {
-      key: 'running',
-      value: false,
-    });
+    
+    this.execution.running = false;
+    this.execution.save();
 
     const k8sClient = new KubernetesClient();
 
     for (const [groupKey, agents] of this.connectedAgents.entries()) {
-      console.log(`🗑️ Cleaning pods for group ${groupKey}`);
       agents.forEach(agent => {
+        console.log(`🗑️ Cleaning pods for group ${agent.id}`);
         this.agentCleanup(k8sClient, agent);
       });
     }
@@ -270,21 +271,23 @@ export class ExecutionRunner {
     this.connectedAgents.set(flowGroupKey, [...currPodsForThisGroup, agent]);
 
     socket.on('ready', async (e: any) => {
-      console.log('💤 Inducing sleep for 10 seconds');
-      await new Promise(resolve => setTimeout(resolve, 20000));
+      // console.log('💤 Inducing sleep for 10 seconds');
+      // await new Promise(resolve => setTimeout(resolve, 20000));
 
       const flowQueue = this.flowQueues.get(flowIndex);
 
       if (!flowQueue || flowQueue.length === 0) {
         console.log(`📭 No tasks left for Flow ${flowIndex + 1}`);
-        socket.emit('shutdown');
+        
+        this.agentCleanup(new KubernetesClient(), agent);
         this.ifExecutionFinished()
         return;
       }
 
       if (!this.flowStatus.get(flowIndex)) {
         console.log(`📭 Flow ${flowIndex + 1} is no longer allowed to run because of a failed group, preventing further groups' execution`);
-        socket.emit('shutdown');
+        
+        this.agentCleanup(new KubernetesClient(), agent);
         this.ifExecutionFinished()
 
         return;
@@ -304,7 +307,8 @@ export class ExecutionRunner {
           console.log(`🪦 Last Pod is trying to spawn the pods for the next group`);
           await this.launchPodsForActiveGroup(flowIndex);
         }
-        socket.emit('shutdown');
+        
+        this.agentCleanup(new KubernetesClient(), agent);
         return;
       } else {
         const task = sgTasks.shift();
@@ -331,7 +335,9 @@ export class ExecutionRunner {
           console.error(`❌ Task ${result.taskId} failed and has no retries left, halting execution for Flow ${flowIndex + 1}`);
           this.flowStatus.set(flowIndex, false);
           this.updateStatus(false);
-          socket.emit('shutdown');
+          
+          this.ifExecutionFinished()
+          this.agentCleanup(new KubernetesClient(), agent);
         }
       }
     });
