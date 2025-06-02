@@ -11,8 +11,9 @@
 ### -> Concurrency issues while writing?
 
 ## 3.5 Deployment -> ⭕ Doing
-    - 
+    - after deployment
     - handle graceful pod cleanup for workers
+    - implement single threaded executions
 
 ## 4. Global Test Data
 

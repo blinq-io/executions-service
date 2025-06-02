@@ -158,7 +158,7 @@ export class KubernetesClient {
     });
   }
 
-  async waitForPodCompletion(podName: string, timeoutMs = 120000) {
+  async waitForPodCompletion(podName: string, timeoutMs = 500000) {
     const start = Date.now();
 
     while (Date.now() - start < timeoutMs) {

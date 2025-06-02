@@ -10,26 +10,30 @@ const podId = process.env.POD_ID;
 
 // const socketUrl = 'http://host.docker.internal:5003'; // for local dev and testing
 const socketUrl = process.env.BACKEND_SOCKET_URL;
-
-if (!extractDir || !podId || !socketUrl) {
-  console.error('❌ Missing required environment variables', {
-    extractDir,
-    podId,
-    socketUrl,
-  });
+if(!socketUrl) {
+  console.error('❌ BACKEND_SOCKET_URL environment variable is not set.');
   process.exit(1);
 }
-
-const projectPath = path.join('/app/shared/project-dir', extractDir);
-const runsPath = path.join(projectPath, 'runs');  //! TODO: work on reports and global_test_data logic
-fs.mkdirSync(runsPath, { recursive: true });
-
 console.log(`🔌 Connecting to socket: ${socketUrl}`);
 const socket = io(socketUrl, {
   path: '/api/executions/ws',
   query: { podId },
   transports: ['websocket'],
 });
+
+if (!extractDir || !podId) {
+  console.error('❌ Missing required environment variables', {
+    extractDir,
+    podId,
+  });
+  socket.emit('cleanup', podId);
+}
+
+const projectPath = path.join('/app/shared/project-dir', extractDir!);
+const runsPath = path.join(projectPath, 'runs');  //! TODO: work on reports and global_test_data logic
+fs.mkdirSync(runsPath, { recursive: true });
+
+
 
 socket.on('task', (task: Task) => {
   console.log(`📦 Received task ${task.id}`);

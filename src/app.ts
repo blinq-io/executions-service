@@ -10,21 +10,13 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/executions', (req, res, next) => {
-  // prevent collisions with WebSocket route
-  console.log('🔥 req.path is', req.path)
-  if (req.path.startsWith('/ws')) {
-    console.log('🚫 Skipping WebSocket route');
-    return next('route');
-  }
-  console.log('✅ Proceeding to execution routes', req.path);
   console.log(`🚀 [ExecutionRoutes] ${req.method} ${req.originalUrl}`);
   next();
 }, executionRoutes);
 
-// ⚠️ Do NOT mount `io` until AFTER Express setup
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
-  path: '/api/executions/ws',
+  path: '/ws',
   cors: {
     origin: '*', // For development, restrict later
   },

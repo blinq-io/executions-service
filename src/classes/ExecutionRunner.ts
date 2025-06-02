@@ -334,8 +334,12 @@ export class ExecutionRunner {
           socket.emit('shutdown');
         }
       }
-    })
+    });
 
+    socket.on('cleanup', (podId) => {
+      const k8sClient = new KubernetesClient();
+      this.agentCleanup(k8sClient, agent);
+    });
 
     socket.on('connect_error', (err) => {
       console.error('❌ Socket connection error:', err.message);
