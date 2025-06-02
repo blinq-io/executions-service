@@ -112,7 +112,9 @@ export class ExecutionRunner {
       try {
         await k8sClient.createPodFromYaml(podSpec);
       } catch (error) {
-        this.stop();
+        console.error(`❌ Failed to create worker pod ${POD_ID}:`, error);
+        console.log(`🛑 Stopping execution due to pod creation failure`);
+        this.stop(true);
         return -1;
       }
     }
@@ -148,7 +150,7 @@ export class ExecutionRunner {
     });
   }
 
-  public async stop() {
+  public async stop(deleteWorkerPods=false) {
     if (!this.execution.running) {
       return;
     }
@@ -244,7 +246,7 @@ export class ExecutionRunner {
         return;
       }
     }
-    this.stop();
+    this.stop(true);
     console.log(`✅ Execution ${this.execution._id} finished successfully!`);
   }
 

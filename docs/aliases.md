@@ -53,7 +53,7 @@ kubectl create job --from=cronjob/exec-6824804f1f29cb1558a4d3be manual-trigger-j
 
 > docker buildx build --no-cache --platform linux/amd64,linux/arm64 -f Dockerfile.server -t blinqio/executions-service:dev1 --push .
 
-
+--> docker buildx build --no-cache --platform linux/amd64,linux/arm64 -f Dockerfile.server -t blinqio/executions-service-dev --push .; es_restart
 
 # restart executions-service deployment
 > es_restart = kubectl patch deployment executions-service -p \\n  "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"date\":\"$(date +%s)\"}}}}}";  kubectl rollout restart deployment executions-service

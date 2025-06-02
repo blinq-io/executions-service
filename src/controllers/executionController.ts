@@ -10,6 +10,7 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 
 import { executionRunnerRegistry } from '../classes/ExecutionRunnerRegistry';
+import { KubernetesClient } from '../classes/KubernetesClient';
 
 const execAsync = promisify(exec);
 export const createExecution = async (req: Request, res: Response) => {
@@ -56,14 +57,16 @@ export const descheduleExecution = async (req: Request, res: Response) => {
   if (!execution) return res.status(404).json({ error: 'Execution not found' });
 
   const cronJobName = `exec-${execution._id}`;
-
+  const k8sClient = new KubernetesClient();
   try {
     execution.enabled = false;
     await execution.save();
 
     // Delete the cron job from Kubernetes
     console.log(`🗑️  Deleting Kubernetes CronJob: ${cronJobName}`);
-    await execAsync(`kubectl delete cronjob ${cronJobName}`);
+    await k8sClient.deleteCronJob(cronJobName);
+
+    // await execAsync(`kubectl delete cronjob ${cronJobName}`);
 
     res.json({ message: `Execution ${execution._id} descheduled and cron job deleted.` });
   } catch (error: any) {
