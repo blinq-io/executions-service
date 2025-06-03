@@ -5,7 +5,7 @@ metadata:
   namespace: default
 subjects:
   - kind: ServiceAccount
-    name: default
+    name: secrets-sa
     namespace: default
 roleRef:
   kind: Role

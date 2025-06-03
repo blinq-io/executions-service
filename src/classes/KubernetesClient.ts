@@ -17,6 +17,11 @@ export class KubernetesClient {
     this.batchApi = this.kc.makeApiClient(k8s.BatchV1Api);
   }
 
+  async deleteCronJob(name: string, namespace = 'default') {
+    return this.batchApi.deleteNamespacedCronJob({ name, namespace });
+  }
+
+
   async createPodFromYaml(yamlContent: string) {
     const manifest = yaml.load(yamlContent) as k8s.V1Pod;
 
@@ -138,10 +143,12 @@ export class KubernetesClient {
   }
 
   async deletePod(name: string) {
+    console.log(`🗑️ Deleting pod ${name}...`);
     await this.k8sApi.deleteNamespacedPod({
       name,
       namespace: this.namespace
     });
+    console.log(`✅ Pod ${name} deleted.`);
   }
 
   async deletePVC(name: string) {
@@ -151,7 +158,7 @@ export class KubernetesClient {
     });
   }
 
-  async waitForPodCompletion(podName: string, timeoutMs = 120000) {
+  async waitForPodCompletion(podName: string, timeoutMs = 500000) {
     const start = Date.now();
 
     while (Date.now() - start < timeoutMs) {

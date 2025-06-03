@@ -1,0 +1,22 @@
+# execution-manager-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: execution-manager
+  namespace: default
+rules:
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["create", "get", "list", "watch", "delete"]
+
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["create", "get", "list", "watch", "delete"]
+
+  - apiGroups: [""]
+    resources: ["pods/status"]
+    verbs: ["get"]
+
+  - apiGroups: ["batch"]
+    resources: ["cronjobs"]
+    verbs: ["create", "get", "list", "watch", "delete"]

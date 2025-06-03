@@ -1,0 +1,2 @@
+app: executions
+image: blinqio/executions-service-main:latest
