@@ -11,7 +11,7 @@ import { executionRunnerRegistry } from './ExecutionRunnerRegistry';
 import { updateRunnerStatus } from '../utils/sse/executionStatus';
 import { createRun, updateExecution } from '../utils/general';
 
-console.log('✅', BACKEND_SOCKET_URL)
+console.log('✅ Backend is running at', BACKEND_SOCKET_URL)
 
 export class ExecutionRunner {
   private io: SocketIOServer;
