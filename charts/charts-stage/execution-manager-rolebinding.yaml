@@ -1,0 +1,14 @@
+# execution-manager-rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: execution-manager-binding
+  namespace: default
+subjects:
+  - kind: ServiceAccount
+    name: secrets-sa
+    namespace: default
+roleRef:
+  kind: Role
+  name: execution-manager
+  apiGroup: rbac.authorization.k8s.io

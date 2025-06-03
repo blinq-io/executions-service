@@ -1,0 +1,46 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-controller
+  namespace: default # Replace with your namespace if necessary
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "16k"
+    nginx.ingress.kubernetes.io/proxy-buffers-number: "8"
+    nginx.ingress.kubernetes.io/proxy-buffering: "on"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream: "true"
+    nginx.ingress.kubernetes.io/auth-tls-secret: default/cloudflare-tls-secret
+    nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
+    nginx.ingress.kubernetes.io/auth-tls-verify-depth: "1"
+    nginx.ingress.kubernetes.io/auth-response-headers: Custom-Header
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://stage.executions.api.blinq.io, https://stage.app.blinq.io, http://localhost:3000"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "Content-Type, Authorization, Custom-Header"
+
+spec:
+  tls:
+    - hosts:
+        - stage.executions.api.blinq.io
+      secretName: ingress-tls
+  ingressClassName: nginx
+  rules:
+    - host: stage.executions.api.blinq.io
+      http:
+        paths:
+          - path: /api/executions
+            pathType: Prefix
+            backend:
+              service:
+                name: executions-service
+                port:
+                  number: 5002
+          - path: /ws
+            pathType: Prefix
+            backend:
+              service:
+                name: executions-service
+                port:
+                  number: 5003
+          

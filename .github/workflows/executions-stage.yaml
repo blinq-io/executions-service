@@ -46,5 +46,5 @@ jobs:
   
       - name: Connect to EKS cluster and run Helm commands
         run: |
-          aws eks --region eu-north-1 update-kubeconfig --name execution-manager-dev
-          helm upgrade executions ./charts/charts-dev/executions-chart --install
+          aws eks --region eu-north-1 update-kubeconfig --name execution-manager-stage
+          helm upgrade executions ./charts/charts-stage/executions-chart --install
