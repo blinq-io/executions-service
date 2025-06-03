@@ -16,17 +16,17 @@ metadata:
     nginx.ingress.kubernetes.io/auth-tls-verify-depth: "1"
     nginx.ingress.kubernetes.io/auth-response-headers: Custom-Header
     nginx.ingress.kubernetes.io/enable-cors: "true"
-    nginx.ingress.kubernetes.io/cors-allow-origin: "https://executions.api.blinq.io, https://dev.app.blinq.io, http://localhost:3000"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://dev.executions.api.blinq.io, https://dev.app.blinq.io, http://localhost:3000"
     nginx.ingress.kubernetes.io/cors-allow-headers: "Content-Type, Authorization, Custom-Header"
 
 spec:
   tls:
     - hosts:
-        - executions.api.blinq.io
+        - dev.executions.api.blinq.io
       secretName: ingress-tls
   ingressClassName: nginx
   rules:
-    - host: executions.api.blinq.io
+    - host: dev.executions.api.blinq.io
       http:
         paths:
           - path: /api/executions
