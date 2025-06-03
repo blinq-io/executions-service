@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import ExecutionModel, { ExecutionStatus, Schedule } from '../models/execution.model';
 import { ExecutionRunner } from '../classes/ExecutionRunner';
-import { TEST_CRON_EXPRESSION, THREAD_LIMIT } from '../constants';
 import { io } from '../app';
 import mongoose from 'mongoose';
 import { scheduleExecutionViaCronjob } from '../schedulers/executionScheduler';
@@ -12,20 +11,15 @@ import { promisify } from 'util';
 import { executionRunnerRegistry } from '../classes/ExecutionRunnerRegistry';
 import { KubernetesClient } from '../classes/KubernetesClient';
 
-const execAsync = promisify(exec);
+// const execAsync = promisify(exec);
 export const createExecution = async (req: Request, res: Response) => {
   try {
     const execution = new ExecutionModel(req.body);
     execution.running=false;
     await execution.save();
-
-    // console.log('🚀 Sending update via stream')
-    // await streamUpdateToClients();
-    // console.log('🚀 Update sent via stream')
-
     res.status(201).json(execution);
   } catch (error) {
-    console.error('Error creating execution:', error);
+    console.error('❌ Error creating execution:', error);
     res.status(500).json({ message: 'Failed to create execution.' });
   }
 };
@@ -33,7 +27,7 @@ export const createExecution = async (req: Request, res: Response) => {
 export const scheduleExecution = async (req: Request, res: Response) => {
   console.log('🚀 Scheduling execution:', req.params.id, '...');
   const execution = await ExecutionModel.findById(req.params.id);
-  if (!execution) return res.status(404).json({ error: 'Execution not found' });
+  if (!execution) return res.status(404).json({ error: '❌ Execution not found' });
   
   const schedule: Schedule = req.body.schedule;
   const envVariables = {
@@ -158,9 +152,9 @@ export const getActiveExecutionsStatus = async (req: Request, res: Response) => 
 
 
 export const getFreeThreadCount = async (req: Request, res: Response) => {
-  const { projectId } = req.query;
+  const { projectId, maxExecutionThreads: maxExecutionThreadsForProject } = req.query;
   const executions = await ExecutionModel.find({ projectId });
-  const freeThreadCount = THREAD_LIMIT - executions.reduce((acc, execution) => {
+  const freeThreadCount = Number(maxExecutionThreadsForProject ?? 0) - executions.reduce((acc, execution) => {
     const threadCount = execution.flows.reduce((sum, flow) => sum + Math.max(...flow.scenarioGroups.map((sg) => sg.threadCount)), 0);
     return acc + (execution.isSingleThreaded ? 1 : threadCount);
   }, 0);

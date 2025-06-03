@@ -26,7 +26,7 @@ setupGlobalSocketHandlers(io);
 
 const PORT = Number(process.env.SOCKET_PORT) || 5003;
 httpServer.listen(PORT, '0.0.0.0', () =>
-  console.log('🚀📈 WS Server running on port em', PORT)
+  console.log('🚀📈 WS Server running on port', PORT)
 );
 
 export { io };
