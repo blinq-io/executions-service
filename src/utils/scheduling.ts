@@ -57,6 +57,9 @@ export function generateDynamicCronExpression(schedule: Schedule): string {
 
   const formattedMinutes = minutes.toString().padStart(2, '0');
   const formattedHours = hours.toString().padStart(2, '0');
-
+  console.log("📆 Cron will run at UTC time:", `${formattedHours}:${formattedMinutes} UTC`);
+  console.log("📆 Local time input:", schedule.time, "Timezone offset:", schedule.timeZone);
+  console.log("🕒 Converted to UTC:", `${formattedHours}:${formattedMinutes}`);
+  console.log("🕒 Final Cron expression:", `${formattedMinutes} ${formattedHours} * * *`);
   return `${formattedMinutes} ${formattedHours} * * *`;
 }
