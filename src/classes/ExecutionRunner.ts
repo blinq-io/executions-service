@@ -214,7 +214,7 @@ export class ExecutionRunner {
       await k8sClient.applyManifestFromFile(PVC_YAML_PATH, {
         EXECUTION_ID,
       });
-      if (process.env.SKIP_SETUP === 'false') {
+      if (!(process.env.SKIP_SETUP === 'true')) {
         await k8sClient.applyManifestFromFile(SETUP_YAML_PATH, {
           EXECUTION_ID,
           EXTRACT_DIR,
