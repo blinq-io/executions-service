@@ -11,7 +11,7 @@ import { executionRunnerRegistry } from './ExecutionRunnerRegistry';
 import { updateRunnerStatus } from '../utils/sse/executionStatus';
 import { createRun, updateExecution } from '../utils/general';
 
-console.log('✅', BACKEND_SOCKET_URL)
+console.log('✅ Backend is running at', BACKEND_SOCKET_URL)
 
 export class ExecutionRunner {
   private io: SocketIOServer;
@@ -214,7 +214,7 @@ export class ExecutionRunner {
       await k8sClient.applyManifestFromFile(PVC_YAML_PATH, {
         EXECUTION_ID,
       });
-      if (process.env.SKIP_SETUP === 'false') {
+      if (!(process.env.SKIP_SETUP === 'true')) {
         await k8sClient.applyManifestFromFile(SETUP_YAML_PATH, {
           EXECUTION_ID,
           EXTRACT_DIR,

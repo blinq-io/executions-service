@@ -1,3 +1,4 @@
+import { BACKEND_SOCKET_URL } from "../constants";
 import { CronJobEnvVariables, Schedule } from "../models/execution.model";
 
 export function generateCronJobYaml(envVariables: CronJobEnvVariables): string {
@@ -14,7 +15,7 @@ export function generateCronJobYaml(envVariables: CronJobEnvVariables): string {
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: exec-${EXECUTION_ID}
+  name: exec-cronjob-${EXECUTION_ID}
 spec:
   schedule: "${CRON_EXPRESSION}"
   suspend: false
@@ -29,7 +30,7 @@ spec:
             - /bin/sh
             - -c
             - |
-              curl -X POST http://host.docker.internal:5000/api/executions/run/${EXECUTION_ID} \\
+              curl -X POST ${BACKEND_SOCKET_URL}/api/executions/run/${EXECUTION_ID} \\
                 -H "Content-Type: application/json" \\
                 -d "{\\"BLINQ_TOKEN\\": \\"${BLINQ_TOKEN}\\", \\"EXTRACT_DIR\\": \\"${EXTRACT_DIR}\\", \\"HEADLESS\\": \\"${HEADLESS}\\", \\"NODE_ENV_BLINQ\\": \\"${NODE_ENV_BLINQ}\\"}"
           restartPolicy: OnFailure
@@ -57,6 +58,9 @@ export function generateDynamicCronExpression(schedule: Schedule): string {
 
   const formattedMinutes = minutes.toString().padStart(2, '0');
   const formattedHours = hours.toString().padStart(2, '0');
-
+  console.log("📆 Cron will run at UTC time:", `${formattedHours}:${formattedMinutes} UTC`);
+  console.log("📆 Local time input:", schedule.time, "Timezone offset:", schedule.timeZone);
+  console.log("🕒 Converted to UTC:", `${formattedHours}:${formattedMinutes}`);
+  console.log("🕒 Final Cron expression:", `${formattedMinutes} ${formattedHours} * * *`);
   return `${formattedMinutes} ${formattedHours} * * *`;
 }
