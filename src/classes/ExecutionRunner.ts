@@ -242,7 +242,11 @@ export class ExecutionRunner {
   }
 
   private ifExecutionFinished() {
+    console.log(`🔍 Checking if execution ${this.execution._id} is finished...`);
     for (const [flowIndex, flowQueue] of this.flowQueues.entries()) {
+      console.log(`📭 Flow ${flowIndex + 1} queue is`, 
+        JSON.stringify(flowQueue, null, 2)
+      );
       if (flowQueue.length !== 0) {
         return;
       }
