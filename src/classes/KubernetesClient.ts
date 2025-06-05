@@ -57,6 +57,21 @@ export class KubernetesClient {
     }
   }
 
+  public async doesPodExist(podName: string): Promise<boolean> {
+    try {
+      await this.k8sApi.readNamespacedPod({
+        name: podName,
+        namespace: this.namespace
+      });
+      return true;
+    } catch (err: any) {
+      const reason = this.extractReason(err);
+      if (reason === 'NotFound') {
+        return false;
+      }
+      throw err; // rethrow if it’s a different error
+    }
+  }
 
   async applyManifestFromFile(filePath: string, vars: Record<string, string>) {
     let content = fs.readFileSync(filePath, 'utf-8');
