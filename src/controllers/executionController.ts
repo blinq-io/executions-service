@@ -98,6 +98,10 @@ export const runExecution = async (req: Request, res: Response) => {
   const execution = await ExecutionModel.findById(req.params.id);
   if (!execution) return res.status(404).json({ error: 'Execution not found' });
 
+  if(execution.running) {
+    return res.json({ message: 'Execution is already running!' });
+  }
+
   const envVariables = req.body;
 
 
