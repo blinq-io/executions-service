@@ -1,5 +1,5 @@
 // src/classes/ExecutionRunner.ts
-import { Execution, ExecutionStatus, Task, TaskResult } from '../models/execution.model';
+import { ExecEnvVars, Execution, ExecutionStatus, Task, TaskResult } from '../models/execution.model';
 import { ExecutionPodAgent } from './ExecutionPodAgent';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { KubernetesClient } from './KubernetesClient';
@@ -22,8 +22,9 @@ export class ExecutionRunner {
   private abortExecutionController: AbortController | null = null;
   public executionStatus: ExecutionStatus;
   private runId: string | null = null;
+  private execEnvVars: ExecEnvVars;
 
-  constructor(execution: Execution, io: SocketIOServer) {
+  constructor(execution: Execution, io: SocketIOServer, execEnvVars: ExecEnvVars) {
     this.execution = execution;
     this.io = io;
     this.initializeQueues();
@@ -34,6 +35,7 @@ export class ExecutionRunner {
       'totalScenarios': execution.flows.reduce((acc, flow) => acc + flow.scenarioGroups.reduce((sum, sg) => sum + sg.scenarios.length, 0), 0),
       'startTime': new Date()
     }
+    this.execEnvVars = execEnvVars;
   }
 
   public async getReportLink(): Promise<string | null> {
@@ -47,7 +49,7 @@ export class ExecutionRunner {
       }
       return this.getReportLink();
     }
-    const env = process.env.NODE_ENV_BLINQ || 'app';
+    const env = this.execEnvVars.NODE_ENV_BLINQ;
     const link = env === 'app' ?
       `https://www.app.blinq.io/${this.execution.projectId}/run-report/${this.runId}` :
       `https://www.${env}.app.blinq.io/${this.execution.projectId}/run-report/${this.runId}`;
@@ -89,7 +91,7 @@ export class ExecutionRunner {
 
   private launchPodsForActiveGroup = async (flowIndex: number) => {
     const EXTRACT_DIR = this.execution.projectId;
-    const BLINQ_TOKEN = process.env.BLINQ_TOKEN!;
+    const BLINQ_TOKEN = this.execEnvVars.BLINQ_TOKEN;
     const k8sClient = new KubernetesClient();
 
     const activeGroupIndex = this.getActiveGroupIndex(flowIndex);
@@ -137,7 +139,7 @@ export class ExecutionRunner {
 
   private async initializeQueues() {
     this.runId = 'loading';
-    const runId = await createRun(this.execution.name, process.env.BLINQ_TOKEN!, process.env.NODE_ENV_BLINQ || 'app');
+    const runId = await createRun(this.execution.name, this.execEnvVars.BLINQ_TOKEN!, this.execEnvVars.NODE_ENV_BLINQ);
     
     if(!runId) return;
     
@@ -207,14 +209,14 @@ export class ExecutionRunner {
     const setupPodName = `setup-${this.execution._id}`;
     const EXECUTION_ID = this.execution._id;
     const EXTRACT_DIR = this.execution.projectId;
-    const BLINQ_TOKEN = process.env.BLINQ_TOKEN!;
-    const NODE_ENV_BLINQ = process.env.NODE_ENV_BLINQ || 'dev';
+    const BLINQ_TOKEN = this.execEnvVars.BLINQ_TOKEN!;
+    const NODE_ENV_BLINQ = this.execEnvVars.NODE_ENV_BLINQ;
 
     try {
       await k8sClient.applyManifestFromFile(PVC_YAML_PATH, {
         EXECUTION_ID,
       });
-      if (!(process.env.SKIP_SETUP === 'true')) {
+      if (!(this.execEnvVars.SKIP_SETUP === 'true')) {
         await k8sClient.applyManifestFromFile(SETUP_YAML_PATH, {
           EXECUTION_ID,
           EXTRACT_DIR,
@@ -242,7 +244,11 @@ export class ExecutionRunner {
   }
 
   private ifExecutionFinished() {
+    console.log(`🔍 Checking if execution ${this.execution._id} is finished...`);
     for (const [flowIndex, flowQueue] of this.flowQueues.entries()) {
+      console.log(`📭 Flow ${flowIndex + 1} queue is`, 
+        JSON.stringify(flowQueue, null, 2)
+      );
       if (flowQueue.length !== 0) {
         return;
       }
