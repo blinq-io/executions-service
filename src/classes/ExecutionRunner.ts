@@ -25,6 +25,7 @@ export class ExecutionRunner {
   private execEnvVars: ExecEnvVars;
 
   constructor(execution: Execution, io: SocketIOServer, execEnvVars: ExecEnvVars) {
+    this.execEnvVars = execEnvVars;
     this.execution = execution;
     this.io = io;
     this.initializeQueues();
@@ -35,7 +36,6 @@ export class ExecutionRunner {
       'totalScenarios': execution.flows.reduce((acc, flow) => acc + flow.scenarioGroups.reduce((sum, sg) => sum + sg.scenarios.length, 0), 0),
       'startTime': new Date()
     }
-    this.execEnvVars = execEnvVars;
   }
 
   public async getReportLink(): Promise<string | null> {
