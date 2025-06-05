@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import ExecutionModel, { ExecutionStatus, Schedule } from '../models/execution.model';
+import ExecutionModel, { ExecEnvVars, ExecutionStatus, Schedule } from '../models/execution.model';
 import { ExecutionRunner } from '../classes/ExecutionRunner';
 import { io } from '../app';
 import mongoose from 'mongoose';
@@ -15,7 +15,7 @@ import { KubernetesClient } from '../classes/KubernetesClient';
 export const createExecution = async (req: Request, res: Response) => {
   try {
     const execution = new ExecutionModel(req.body);
-    execution.running=false;
+    execution.running = false;
     await execution.save();
     res.status(201).json(execution);
   } catch (error) {
@@ -28,14 +28,14 @@ export const scheduleExecution = async (req: Request, res: Response) => {
   console.log('🚀 Scheduling execution:', req.params.id, '...');
   const execution = await ExecutionModel.findById(req.params.id);
   if (!execution) return res.status(404).json({ error: '❌ Execution not found' });
-  
+
   const schedule: Schedule = req.body.schedule;
   const envVariables = {
     ...req.body.envVariables,
-    EXECUTION_ID:execution._id,
+    EXECUTION_ID: execution._id,
     CRON_EXPRESSION: generateDynamicCronExpression(schedule),
   };
-  console.log('▼ Recieved schedule:', JSON.stringify({ schedule: generateDynamicCronExpression(schedule) }, null, 2));
+  // console.log('▼ Recieved schedule:', JSON.stringify({ schedule: generateDynamicCronExpression(schedule) }, null, 2));
 
   execution.enabled = true;
   execution.save();
@@ -50,7 +50,7 @@ export const descheduleExecution = async (req: Request, res: Response) => {
   const execution = await ExecutionModel.findById(req.params.id);
   if (!execution) return res.status(404).json({ error: 'Execution not found' });
 
-  const cronJobName = `exec-${execution._id}`;
+  const cronJobName = `exec-cronjob-${execution._id}`;
   const k8sClient = new KubernetesClient();
   try {
     execution.enabled = false;
@@ -73,7 +73,7 @@ export const haltExecution = async (req: Request, res: Response) => {
   const execution = await ExecutionModel.findById(req.params.id);
   if (!execution) return res.status(404).json({ error: 'Execution not found' });
 
-  execution.running=false;
+  execution.running = false;
   execution.save();
 
   const runner = executionRunnerRegistry.get(execution._id.toString());
@@ -97,11 +97,19 @@ export const runExecution = async (req: Request, res: Response) => {
     process.env[key] = String(value);
   }
 
-  execution.running=true;
+  execution.running = true;
   execution.save();
 
-  const runner = new ExecutionRunner(execution, io);
-  runner.start(process.env.RUN_AS_MOCK === 'true');
+  const execEnvVars: ExecEnvVars = {
+    BLINQ_TOKEN: String(envVariables.BLINQ_TOKEN ?? ''),
+    VIA_CRON: String(envVariables.VIA_CRON ?? ''),
+    HEADLESS: String(envVariables.HEADLESS ?? ''),
+    NODE_ENV_BLINQ: String(envVariables.NODE_ENV_BLINQ ?? 'app'),
+    RUN_AS_MOCK: String(envVariables.RUN_AS_MOCK ?? ''),
+  }
+
+  const runner = new ExecutionRunner(execution, io, execEnvVars);
+  runner.start(envVariables.RUN_AS_MOCK === 'true');
   res.json({ message: 'Execution started' });
 };
 
