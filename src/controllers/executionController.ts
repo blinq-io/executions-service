@@ -47,6 +47,7 @@ type DeleteCronJobResult = { error?: Error };
 
 async function deleteCronJob(execution: Execution, deschedule = false): Promise<DeleteCronJobResult> {
 
+
   const cronJobName = `exec-cronjob-${execution._id}`;
   const k8sClient = new KubernetesClient();
   try {
