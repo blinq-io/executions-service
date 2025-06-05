@@ -19,8 +19,11 @@ metadata:
 spec:
   schedule: "${CRON_EXPRESSION}"
   suspend: false
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
+      ttlSecondsAfterFinished: 60
       template:
         spec:
           containers:
@@ -32,7 +35,7 @@ spec:
             - |
               curl -X POST ${BACKEND_SOCKET_URL}/api/executions/run/${EXECUTION_ID} \\
                 -H "Content-Type: application/json" \\
-                -d "{\\"BLINQ_TOKEN\\": \\"${BLINQ_TOKEN}\\", \\"EXTRACT_DIR\\": \\"${EXTRACT_DIR}\\", \\"HEADLESS\\": \\"${HEADLESS}\\", \\"NODE_ENV_BLINQ\\": \\"${NODE_ENV_BLINQ}\\"}"
+                -d "{\\"BLINQ_TOKEN\\": \\"${BLINQ_TOKEN}\\", \\"EXTRACT_DIR\\": \\"${EXTRACT_DIR}\\", \\"VIA_CRON\\": \\"true\\", \\"HEADLESS\\": \\"${HEADLESS}\\", \\"NODE_ENV_BLINQ\\": \\"${NODE_ENV_BLINQ}\\"}"
           restartPolicy: OnFailure
 `;
 }
