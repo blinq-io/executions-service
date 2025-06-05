@@ -208,7 +208,7 @@ export const updateExecution = async (req: Request, res: Response) => {
   const { wasScheduleUpdated, BLINQ_TOKEN, NODE_ENV_BLINQ } = req.query;
   if (wasScheduleUpdated === 'true') {
     // delete cron job and recreate the cron job but dont deschedule it
-    deleteCronJob(execution, false);
+    await deleteCronJob(execution, false);
     const envVariables: CronJobEnvVariables = {
       EXECUTION_ID: execution._id,
       CRON_EXPRESSION: generateDynamicCronExpression(execution.schedule),
@@ -217,6 +217,8 @@ export const updateExecution = async (req: Request, res: Response) => {
       NODE_ENV_BLINQ: NODE_ENV_BLINQ ? String(NODE_ENV_BLINQ) : 'app',
       HEADLESS: true
     };
+
+    await new Promise(resolve => setTimeout(resolve, 5000));
     scheduleExecutionViaCronjob(envVariables);
   }
 
