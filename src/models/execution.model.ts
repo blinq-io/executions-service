@@ -43,6 +43,15 @@ export interface Schedule {
   timeZone: number;
 }
 
+export interface ExecEnvVars {
+  BLINQ_TOKEN: string;
+  VIA_CRON: string;
+  HEADLESS: string;
+  NODE_ENV_BLINQ: string;
+  RUN_AS_MOCK?: string;
+  SKIP_SETUP?: string;
+}
+
 export interface Execution extends Document {
   _id: string;
   name: string;
