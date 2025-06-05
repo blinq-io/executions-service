@@ -128,7 +128,7 @@ export class KubernetesClient {
           } catch (err: any) {
             const reason = this.extractReason(err);
             if (reason === 'AlreadyExists') {
-              console.log(`⚠️ PVC Cronjob already exists, skipping creation.`);
+              console.log(`⚠️ Cronjob already exists, skipping creation.`);
               return;
             }
             throw err;
