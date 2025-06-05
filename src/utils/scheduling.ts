@@ -40,15 +40,21 @@ spec:
 `;
 }
 
-
+//? * * * * * - Cron expression format
+//  | | | | +----- Day of the week (0 - 7) (Sunday=0 or 7)
+//  | | | +------- Month (1 - 12) //! not relevant for our scheduling
+//  | | +--------- Day of the month (1 - 31)  //! not relevant for our scheduling
+//  | +----------- Hour (0 - 23)
+//  +------------- Minute (0 - 5
 export function generateDynamicCronExpression(schedule: Schedule): string {
   const [h, m] = schedule.time.split(':').map(Number);
-  const t =  new Date(Date.UTC(2025, 4, 16, h, m, 0));
+
+  const t = new Date(Date.UTC(2025, 4, 16, h, m, 0));
   const positiveOffset = schedule.timeZone > 0;
   const offsetH = Math.floor(Math.abs(schedule.timeZone));
   const offsetM = Math.round((Math.abs(schedule.timeZone) - offsetH) * 60);
 
-  if(!positiveOffset) {
+  if (!positiveOffset) {
     t.setUTCHours(t.getUTCHours() + offsetH);
     t.setUTCMinutes(t.getUTCMinutes() + offsetM);
   } else {
@@ -61,9 +67,27 @@ export function generateDynamicCronExpression(schedule: Schedule): string {
 
   const formattedMinutes = minutes.toString().padStart(2, '0');
   const formattedHours = hours.toString().padStart(2, '0');
-  console.log("📆 Cron will run at UTC time:", `${formattedHours}:${formattedMinutes} UTC`);
+
+  const dayMap: Record<string, string> = {
+    Sun: "0",
+    Mon: "1",
+    Tue: "2",
+    Wed: "3",
+    Thu: "4",
+    Fri: "5",
+    Sat: "6",
+  };
+
+  const dayPart = schedule.days.length > 0
+    ? schedule.days.map((d) => dayMap[d]).join(",")
+    : "*";
+
+  const cron = `${formattedMinutes} ${formattedHours} * * ${dayPart}`;
+
+  console.log("📆 Cron will run at UTC time:", `${hours}:${minutes} UTC`);
   console.log("📆 Local time input:", schedule.time, "Timezone offset:", schedule.timeZone);
-  console.log("🕒 Converted to UTC:", `${formattedHours}:${formattedMinutes}`);
-  console.log("🕒 Final Cron expression:", `${formattedMinutes} ${formattedHours} * * *`);
-  return `${formattedMinutes} ${formattedHours} * * *`;
+  console.log("📆 Selected days:", schedule.days.join(", "));
+  console.log("🕒 Final Cron expression:", cron);
+
+  return cron;
 }
