@@ -10,7 +10,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/executions', (req, res, next) => {
-  console.log(`🚀 [ExecutionRoutes] ${req.method} ${req.originalUrl}`);
+  const timestamp = new Date().toISOString();
+  console.log(`⇅ [${timestamp}] [ExecutionRoutes] ${req.method} ${req.originalUrl}`);
   next();
 }, executionRoutes);
 

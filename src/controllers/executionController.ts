@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import ExecutionModel, { ExecEnvVars, ExecutionStatus, Schedule } from '../models/execution.model';
+import ExecutionModel, { CronJobEnvVariables, ExecEnvVars, Execution, ExecutionStatus, Schedule } from '../models/execution.model';
 import { ExecutionRunner } from '../classes/ExecutionRunner';
 import { io } from '../app';
 import mongoose from 'mongoose';
@@ -43,6 +43,26 @@ export const scheduleExecution = async (req: Request, res: Response) => {
   scheduleExecutionViaCronjob(envVariables);
   res.json({ message: 'Execution scheduled' });
 }
+type DeleteCronJobResult = { error?: Error };
+
+async function deleteCronJob(execution: Execution, deschedule = false): Promise<DeleteCronJobResult> {
+
+  const cronJobName = `exec-cronjob-${execution._id}`;
+  const k8sClient = new KubernetesClient();
+  try {
+    if (deschedule) {
+      execution.enabled = false;
+      await execution.save();
+    }
+
+    console.log(`🗑️  Deleting Kubernetes CronJob: ${cronJobName}`);
+    await k8sClient.deleteCronJob(cronJobName);
+    // await execAsync(`kubectl delete cronjob ${cronJobName}`);
+    return {};
+  } catch (error: any) {
+    return error;
+  }
+}
 
 export const descheduleExecution = async (req: Request, res: Response) => {
   console.log('🚀 Descheduling execution:', req.params.id, '...');
@@ -50,22 +70,12 @@ export const descheduleExecution = async (req: Request, res: Response) => {
   const execution = await ExecutionModel.findById(req.params.id);
   if (!execution) return res.status(404).json({ error: 'Execution not found' });
 
-  const cronJobName = `exec-cronjob-${execution._id}`;
-  const k8sClient = new KubernetesClient();
-  try {
-    execution.enabled = false;
-    await execution.save();
-
-    // Delete the cron job from Kubernetes
-    console.log(`🗑️  Deleting Kubernetes CronJob: ${cronJobName}`);
-    await k8sClient.deleteCronJob(cronJobName);
-
-    // await execAsync(`kubectl delete cronjob ${cronJobName}`);
-
-    res.json({ message: `Execution ${execution._id} descheduled and cron job deleted.` });
-  } catch (error: any) {
+  const { error }: DeleteCronJobResult = await deleteCronJob(execution, true);
+  if (error) {
     console.error('❌ Failed to deschedule execution:', error.message);
     res.status(500).json({ error: 'Failed to deschedule execution', details: error.message });
+  } else {
+    res.json({ message: `Execution ${execution._id} descheduled and cron job deleted.` });
   }
 };
 
@@ -195,8 +205,25 @@ export const updateExecution = async (req: Request, res: Response) => {
   }
   const execution = await ExecutionModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
   if (!execution) return res.status(404).json({ error: 'Execution not found' });
+
+  const { wasScheduleUpdated, BLINQ_TOKEN, NODE_ENV_BLINQ } = req.query;
+  if (wasScheduleUpdated === 'true') {
+    // delete cron job and recreate the cron job but dont deschedule it
+    deleteCronJob(execution, false);
+    const envVariables: CronJobEnvVariables = {
+      EXECUTION_ID: execution._id,
+      CRON_EXPRESSION: generateDynamicCronExpression(execution.schedule),
+      EXTRACT_DIR: execution.projectId,
+      BLINQ_TOKEN: BLINQ_TOKEN ? String(BLINQ_TOKEN) : '',
+      NODE_ENV_BLINQ: NODE_ENV_BLINQ ? String(NODE_ENV_BLINQ) : 'app',
+      HEADLESS: true
+    };
+    scheduleExecutionViaCronjob(envVariables);
+  }
+
   res.json(execution);
 };
+
 export const deleteExecution = async (req: Request, res: Response) => {
   const execution = await ExecutionModel.findByIdAndDelete(req.params.id);
   if (!execution) return res.status(404).json({ error: 'Execution not found' });
