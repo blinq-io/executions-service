@@ -39,12 +39,12 @@ export class ExecutionRunner {
   }
 
   public async getReportLink(): Promise<string | null> {
-    if(!this.runId) {
+    if (!this.runId) {
       return null;
     }
-    if(this.runId === 'loading') {
+    if (this.runId === 'loading') {
       console.log('🔄 Waiting for runId to be initialized...');
-      while(this.runId === 'loading') {
+      while (this.runId === 'loading') {
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
       return this.getReportLink();
@@ -76,7 +76,7 @@ export class ExecutionRunner {
   }
 
   private getActiveGroupIndex = (flowIndex: number): number => {
-    for(let [id, queue] of this.flowQueues.entries()) {
+    for (let [id, queue] of this.flowQueues.entries()) {
       console.log(`🚀 Flow ${id} -> `, JSON.stringify(queue, null, 2));
     }
     const flowQueue = this.flowQueues.get(flowIndex);
@@ -130,20 +130,24 @@ export class ExecutionRunner {
     agent.socket.emit('shutdown');
     const workerId = 'worker-' + agent.id;
     try {
-      await k8sClient.deletePod(workerId);
+      const podExists = await k8sClient.doesPodExist(workerId);
+      if(podExists) {
+        await k8sClient.deletePod(workerId);
+      }
     } catch (err: any) {
-      console.warn(`⚠️ Failed to delete pod ${workerId}:`, err.message);
+      console.warn(`⚠️ Failed to check existence/delete pod ${workerId}:`, err.message);
     }
   }
+
 
 
   private async initializeQueues() {
     this.runId = 'loading';
     const runId = await createRun(this.execution.name, this.execEnvVars.BLINQ_TOKEN!, this.execEnvVars.NODE_ENV_BLINQ);
-    
-    if(!runId) return;
-    
-    this.runId= runId;
+
+    if (!runId) return;
+
+    this.runId = runId;
 
 
     this.execution.flows.forEach((flow, flowIndex) => {
@@ -157,12 +161,12 @@ export class ExecutionRunner {
     });
   }
 
-  public async stop(deleteWorkerPods=false) {
+  public async stop(deleteWorkerPods = false) {
     if (!this.execution.running) {
       return;
     }
     console.log(`🛑 Stopping execution ${this.execution._id}...`);
-    
+
     this.execution.running = false;
     this.execution.save();
 
@@ -193,7 +197,7 @@ export class ExecutionRunner {
   public async start(mock = false) {
     this.executionStatus.startTime = new Date();
     executionRunnerRegistry.set(this.execution._id.toString(), this);
-    
+
     updateRunnerStatus(this.execution._id, this.execution.projectId, this.executionStatus);
 
     if (mock) {
@@ -246,11 +250,15 @@ export class ExecutionRunner {
   private ifExecutionFinished() {
     console.log(`🔍 Checking if execution ${this.execution._id} is finished...`);
     for (const [flowIndex, flowQueue] of this.flowQueues.entries()) {
-      console.log(`📭 Flow ${flowIndex + 1} queue is`, 
+      console.log(`📭 Flow ${flowIndex + 1} queue is`,
         JSON.stringify(flowQueue, null, 2)
       );
       if (flowQueue.length !== 0) {
-        return;
+        for (const sgTasks of flowQueue) {
+          if (sgTasks.length > 0) {
+            return;
+          }
+        }
       }
     }
     this.stop(true);
@@ -284,7 +292,7 @@ export class ExecutionRunner {
 
       if (!flowQueue || flowQueue.length === 0) {
         console.log(`📭 No tasks left for Flow ${flowIndex + 1}`);
-        
+
         this.agentCleanup(new KubernetesClient(), agent);
         this.ifExecutionFinished()
         return;
@@ -292,7 +300,7 @@ export class ExecutionRunner {
 
       if (!this.flowStatus.get(flowIndex)) {
         console.log(`📭 Flow ${flowIndex + 1} is no longer allowed to run because of a failed group, preventing further groups' execution`);
-        
+
         this.agentCleanup(new KubernetesClient(), agent);
         this.ifExecutionFinished()
 
@@ -313,7 +321,7 @@ export class ExecutionRunner {
           console.log(`🪦 Last Pod is trying to spawn the pods for the next group`);
           await this.launchPodsForActiveGroup(flowIndex);
         }
-        
+
         this.agentCleanup(new KubernetesClient(), agent);
         return;
       } else {
@@ -341,7 +349,7 @@ export class ExecutionRunner {
           console.error(`❌ Task ${result.taskId} failed and has no retries left, halting execution for Flow ${flowIndex + 1}`);
           this.flowStatus.set(flowIndex, false);
           this.updateStatus(false);
-          
+
           this.ifExecutionFinished()
           this.agentCleanup(new KubernetesClient(), agent);
         }
