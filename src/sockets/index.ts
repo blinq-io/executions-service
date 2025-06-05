@@ -13,19 +13,19 @@ export function setupGlobalSocketHandlers(io: SocketIOServer) {
       socket.on('subscribeToExecutionCrud', (projectId: string) => {
         if (projectId) {
           socket.join(`execution-crud:${projectId}`);
-          console.log(`✅ [Frontend] Joined execution-crud:${projectId}`);
+          // console.log(`✅ [Frontend] Joined execution-crud:${projectId}`);
         }
       });
       socket.on('subscribeToExecutionStatus', (projectId: string) => {
         if (projectId) {
           socket.join(`execution-status:${projectId}`);
-          console.log(`✅ [Frontend] Joined execution-status:${projectId}`);
+          // console.log(`✅ [Frontend] Joined execution-status:${projectId}`);
 
           sendLatestStatusDataToNewClient(socket, projectId);
         }
       });
       socket.on('disconnect', () => {
-        console.log(`❌ [Frontend] WebSocket disconnected: ${socket.id}`);
+        // console.log(`❌ [Frontend] WebSocket disconnected: ${socket.id}`);
       });
     } 
     if(podId) {

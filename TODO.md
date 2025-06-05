@@ -10,10 +10,12 @@
 ## 3. Generate Reports in a organized structure -> ✅ done
 ### -> Concurrency issues while writing?
 
-## 3.5 Deployment -> ⭕ Doing
-    - after deployment
+## 3.5 Deployment -> ✅ Done
+    - after deployment ✅ Done
     - handle graceful pod cleanup for workers
-    - implement single threaded executions
+        - for basic flows ✅ Done
+        - for the case where user assigns M threads to a group with N scenarios and M > N, then there are stray worker pods, which are not deleted - ❗DO ASAP
+    - implement single threaded executions - 
 
 ## 4. Global Test Data
 
