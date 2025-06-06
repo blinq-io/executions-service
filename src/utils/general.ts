@@ -1,7 +1,7 @@
 import executionModel from "../models/execution.model";
 
 export const createRun = async (name: string, TOKEN: string, env: string) => {
-  const baseUrl = env === 'app' ? `https://api.blinq.io/api/runs/cucumber-runs/create` : `https://${env}.api.blinq.io/api/runs/cucumber-runs/create`;
+  const baseUrl = env === 'prod' ? `https://api.blinq.io/api/runs/cucumber-runs/create` : `https://${env}.api.blinq.io/api/runs/cucumber-runs/create`;
   try {
     const response = await fetch(
       baseUrl,
