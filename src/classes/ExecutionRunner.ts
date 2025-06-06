@@ -49,8 +49,8 @@ export class ExecutionRunner {
       }
       return this.getReportLink();
     }
-    const env = process.env.NODE_ENV_BLINQ || 'app';
-    const link = env === 'app' ?
+    const env = process.env.NODE_ENV_BLINQ || 'prod';
+    const link = env === 'prod' ?
       `https://www.app.blinq.io/${this.execution.projectId}/run-report/${this.runId}` :
       `https://www.${env}.app.blinq.io/${this.execution.projectId}/run-report/${this.runId}`;
     return link;
@@ -143,7 +143,7 @@ export class ExecutionRunner {
 
   private async initializeQueues() {
     this.runId = 'loading';
-    const runId = await createRun(this.execution.name, process.env.BLINQ_TOKEN!, process.env.NODE_ENV_BLINQ || 'app');
+    const runId = await createRun(this.execution.name, process.env.BLINQ_TOKEN!, process.env.NODE_ENV_BLINQ || 'prod');
     
     if(!runId) return;
     
