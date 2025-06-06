@@ -117,7 +117,7 @@ export const runExecution = async (req: Request, res: Response) => {
     BLINQ_TOKEN: String(envVariables.BLINQ_TOKEN ?? ''),
     VIA_CRON: String(envVariables.VIA_CRON ?? ''),
     HEADLESS: String(envVariables.HEADLESS ?? ''),
-    NODE_ENV_BLINQ: String(envVariables.NODE_ENV_BLINQ ?? 'app'),
+    NODE_ENV_BLINQ: String(envVariables.NODE_ENV_BLINQ ?? 'prod'),
     RUN_AS_MOCK: String(envVariables.RUN_AS_MOCK ?? ''),
   }
 
@@ -218,7 +218,7 @@ export const updateExecution = async (req: Request, res: Response) => {
       CRON_EXPRESSION: generateDynamicCronExpression(execution.schedule),
       EXTRACT_DIR: execution.projectId,
       BLINQ_TOKEN: BLINQ_TOKEN ? String(BLINQ_TOKEN) : '',
-      NODE_ENV_BLINQ: NODE_ENV_BLINQ ? String(NODE_ENV_BLINQ) : 'app',
+      NODE_ENV_BLINQ: NODE_ENV_BLINQ ? String(NODE_ENV_BLINQ) : 'prod',
       HEADLESS: true
     };
 
