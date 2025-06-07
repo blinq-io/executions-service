@@ -211,7 +211,7 @@ export const updateExecution = async (req: Request, res: Response) => {
   if (!execution) return res.status(404).json({ error: 'Execution not found' });
 
   const { wasScheduleUpdated, BLINQ_TOKEN, NODE_ENV_BLINQ } = req.query;
-  if (wasScheduleUpdated === 'true') {
+  if (wasScheduleUpdated === 'true' && execution.enabled) {
     // delete cron job and recreate the cron job but dont deschedule it
     await deleteCronJob(execution, false);
     const envVariables: CronJobEnvVariables = {
@@ -223,7 +223,7 @@ export const updateExecution = async (req: Request, res: Response) => {
       HEADLESS: true
     };
 
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    await new Promise(resolve => setTimeout(resolve, 2000));
     scheduleExecutionViaCronjob(envVariables);
   }
 
